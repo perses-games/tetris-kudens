@@ -1,0 +1,54 @@
+package games.perses.tetris
+
+import com.persesgames.game.DrawMode
+import com.persesgames.game.Game
+import com.persesgames.game.Screen
+import com.persesgames.sprite.Sprite
+import com.persesgames.sprite.SpriteBatch
+import com.persesgames.text.Texts
+import com.persesgames.texture.Textures
+import kotlin.js.Math
+
+/**
+ * Created by rnentjes on 4-2-17.
+ */
+class WelcomeScreen : Screen() {
+    var sprites = SpriteBatch()
+    var blue = Sprite("BLUE")
+    var red = Sprite("RED")
+    var deltaY = 0f
+    var deltaX = 0f
+
+    override fun loadResources() {
+        Textures.load("BLUE", "img/blue.png")
+        Textures.load("RED", "img/red.png")
+    }
+
+    override fun update(time: Float, delta: Float) {
+        deltaY = 1000f + (Math.sin(time / 3.0) * 50.0).toFloat()
+        deltaX = (Math.cos(time / 5.0) * 50.0).toFloat()
+    }
+
+    override fun render() {
+        for (x in 5..14) {
+            for (y in 1..9) {
+                sprites.draw(blue, x*80f + deltaX, y*80f + deltaY, scale = 10f)
+                sprites.draw(red, x*80f, 100f + y*80f, scale = 10f)
+            }
+        }
+
+        sprites.render()
+
+        Texts.drawText(5f, 40f, "FPS ${Game.fps}", font = "bold 24pt Arial", fillStyle = "rgba(0, 255, 0, 1)")
+    }
+}
+
+fun main(args: Array<String>) {
+    Game.view.setToWidth(1600f)
+    Game.view.drawMode = DrawMode.NEAREST
+
+    Game.view.minAspectRatio = 160f/240f
+    Game.view.maxAspectRatio = 160f/240f
+
+    Game.start(WelcomeScreen())
+}
