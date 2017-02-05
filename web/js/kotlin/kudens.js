@@ -215,6 +215,8 @@ var kudens = function (_, Kotlin) {
       gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_MAG_FILTER, WebGLRenderingContext.LINEAR);
       gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_MIN_FILTER, WebGLRenderingContext.LINEAR);
     }
+    gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_WRAP_T, WebGLRenderingContext.CLAMP_TO_EDGE);
+    gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_WRAP_S, WebGLRenderingContext.CLAMP_TO_EDGE);
     gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, null);
   };
   Textures.prototype.ready = function () {
@@ -1225,12 +1227,12 @@ var kudens = function (_, Kotlin) {
   }
   ShaderProgramMesh.prototype.queue_8cqhcw$ = function (vertices) {
     var tmp$;
-    this.queue_o5v4nz$(Array.isArray(tmp$ = vertices) ? tmp$ : Kotlin.throwCCE());
+    this.queueArray_o5v4nz$(Array.isArray(tmp$ = vertices) ? tmp$ : Kotlin.throwCCE());
   };
-  ShaderProgramMesh.prototype.queue_o5v4nz$ = function (vertices) {
+  ShaderProgramMesh.prototype.queueArray_o5v4nz$ = function (vertices) {
     this.data.set(vertices, this.currentIndex);
     this.currentIndex = this.currentIndex + vertices.length | 0;
-    if (this.currentIndex === this.data.length) {
+    if (this.bufferFull()) {
       this.currentIndex = 0;
     }
   };

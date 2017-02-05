@@ -10,8 +10,30 @@ import com.persesgames.texture.Textures
 import kotlin.js.Math
 
 /**
- * Created by rnentjes on 4-2-17.
+ * Shapes:
+ *
+ * OOOO
+ *
+ * OO
+ *  OO
+ *
+ *  OO
+ * OO
+ *
+ * OO
+ * OO
+ *
+ * O
+ * OOO
+ *
+ *   O
+ * OOO
+ *
+ *  O
+ * OOO
  */
+
+private val SCALE = 4f
 class WelcomeScreen : Screen() {
     var sprites = SpriteBatch()
     var blue = Sprite("BLUE")
@@ -25,27 +47,28 @@ class WelcomeScreen : Screen() {
     }
 
     override fun update(time: Float, delta: Float) {
-        deltaY = 1000f + (Math.sin(time / 3.0) * 50.0).toFloat()
-        deltaX = (Math.cos(time / 5.0) * 50.0).toFloat()
+        deltaY = 10f + (Math.sin(time / 3.0) * 25f * SCALE).toFloat()
+        deltaX = (Math.cos(time / 5.0) * 25f * SCALE).toFloat()
     }
 
     override fun render() {
         for (x in 5..14) {
             for (y in 1..9) {
-                sprites.draw(blue, x*80f + deltaX, y*80f + deltaY, scale = 10f)
-                sprites.draw(red, x*80f, 100f + y*80f, scale = 10f)
+                sprites.draw(blue, x*8f * SCALE + deltaX, y*8f*SCALE + deltaY, scale = SCALE * 1.075f)
+                sprites.draw(red, x*8f * SCALE, 100f * SCALE + y*8f*SCALE, scale = SCALE * 1.075f)
             }
         }
 
         sprites.render()
 
-        Texts.drawText(5f, 40f, "FPS ${Game.fps}", font = "bold 24pt Arial", fillStyle = "rgba(0, 255, 0, 1)")
+        Texts.drawText(7f, 42f, "FPS ${Game.fps}", font = "bold 24pt Arial", fillStyle = "rgba(50, 50, 50, 1)")
+        Texts.drawText(5f, 40f, "FPS ${Game.fps}", font = "bold 24pt Arial", fillStyle = "rgba(200, 255, 200, 1)")
     }
 }
 
 fun main(args: Array<String>) {
-    Game.view.setToWidth(1600f)
-    Game.view.drawMode = DrawMode.NEAREST
+    Game.view.setToWidth(160f*SCALE)
+    Game.view.drawMode = DrawMode.LINEAR
 
     Game.view.minAspectRatio = 160f/240f
     Game.view.maxAspectRatio = 160f/240f

@@ -15,6 +15,7 @@ var tetris = function (_, Kotlin, $module$kudens) {
   var DrawMode = $module$kudens.com.persesgames.game.DrawMode;
   WelcomeScreen.prototype = Object.create(Screen.prototype);
   WelcomeScreen.prototype.constructor = WelcomeScreen;
+  var SCALE;
   function WelcomeScreen() {
     Screen.call(this);
     this.sprites = new SpriteBatch();
@@ -28,18 +29,19 @@ var tetris = function (_, Kotlin, $module$kudens) {
     texture_0.Textures.load_puj7f4$('RED', 'img/red.png');
   };
   WelcomeScreen.prototype.update_dleff0$ = function (time, delta) {
-    this.deltaY = 1000.0 + Math.sin(time / 3.0) * 50.0;
-    this.deltaX = Math.cos(time / 5.0) * 50.0;
+    this.deltaY = 10.0 + Math.sin(time / 3.0) * 25.0 * SCALE;
+    this.deltaX = Math.cos(time / 5.0) * 25.0 * SCALE;
   };
   WelcomeScreen.prototype.render = function () {
     for (var x = 5; x <= 14; x++) {
       for (var y = 1; y <= 9; y++) {
-        this.sprites.draw_xrfpo0$(this.blue, x * 80.0 + this.deltaX, y * 80.0 + this.deltaY, 10.0);
-        this.sprites.draw_xrfpo0$(this.red, x * 80.0, 100.0 + y * 80.0, 10.0);
+        this.sprites.draw_xrfpo0$(this.blue, x * 8.0 * SCALE + this.deltaX, y * 8.0 * SCALE + this.deltaY, SCALE * 1.075);
+        this.sprites.draw_xrfpo0$(this.red, x * 8.0 * SCALE, 100.0 * SCALE + y * 8.0 * SCALE, SCALE * 1.075);
       }
     }
     this.sprites.render();
-    text_0.Texts.drawText_k35s1u$(5.0, 40.0, 'FPS ' + game_0.Game.fps, 'bold 24pt Arial', 'rgba(0, 255, 0, 1)');
+    text_0.Texts.drawText_k35s1u$(7.0, 42.0, 'FPS ' + game_0.Game.fps, 'bold 24pt Arial', 'rgba(50, 50, 50, 1)');
+    text_0.Texts.drawText_k35s1u$(5.0, 40.0, 'FPS ' + game_0.Game.fps, 'bold 24pt Arial', 'rgba(200, 255, 200, 1)');
   };
   WelcomeScreen.$metadata$ = {
     kind: Kotlin.Kind.CLASS,
@@ -47,8 +49,8 @@ var tetris = function (_, Kotlin, $module$kudens) {
     interfaces: [Screen]
   };
   function main(args) {
-    game_0.Game.view.setToWidth_mx4ult$(1600.0);
-    game_0.Game.view.drawMode = DrawMode.NEAREST;
+    game_0.Game.view.setToWidth_mx4ult$(160.0 * SCALE);
+    game_0.Game.view.drawMode = DrawMode.LINEAR;
     game_0.Game.view.minAspectRatio = 160.0 / 240.0;
     game_0.Game.view.maxAspectRatio = 160.0 / 240.0;
     game_0.Game.start_ocgj3q$(new WelcomeScreen());
@@ -58,6 +60,7 @@ var tetris = function (_, Kotlin, $module$kudens) {
   var package$tetris = package$perses.tetris || (package$perses.tetris = {});
   package$tetris.WelcomeScreen = WelcomeScreen;
   package$tetris.main_kand9s$ = main;
+  SCALE = 4.0;
   Kotlin.defineModule('tetris', _);
   main([]);
   return _;
