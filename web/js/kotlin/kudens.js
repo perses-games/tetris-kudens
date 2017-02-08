@@ -180,7 +180,7 @@ var kudens = function (_, Kotlin) {
   function Textures$load$lambda(closure$webGlTexture, closure$image, this$Textures, closure$name) {
     return function (it) {
       var tmp$;
-      this$Textures.textureLoaded_qtjlcy$(closure$webGlTexture, closure$image);
+      this$Textures.textureLoaded_0(closure$webGlTexture, closure$image);
       var texture = new Texture(closure$webGlTexture, this$Textures.shaderProgram, closure$image.width, closure$image.height);
       this$Textures.textures.put_xwzc9p$(closure$name, texture);
       return tmp$ = this$Textures.loaded, this$Textures.loaded = tmp$ + 1 | 0, tmp$;
@@ -200,13 +200,54 @@ var kudens = function (_, Kotlin) {
       throw new IllegalStateException("Couldn't create webgl texture!");
     }
   };
+  Textures.prototype.create_bblzc9$ = function (name, image) {
+    var gl = Game_getInstance().gl();
+    this.startedLoading = this.startedLoading + 1 | 0;
+    var webGlTexture = gl.createTexture();
+    if (webGlTexture != null) {
+      this.textureLoaded_0(webGlTexture, image);
+      var texture = new Texture(webGlTexture, this.shaderProgram, image.width, image.height);
+      this.textures.put_xwzc9p$(name, texture);
+      this.loaded = this.loaded + 1 | 0;
+    }
+     else {
+      throw new IllegalStateException("Couldn't create webgl texture!");
+    }
+  };
+  Textures.prototype.create_56dudh$ = function (name, width, height, image) {
+    var gl = Game_getInstance().gl();
+    this.startedLoading = this.startedLoading + 1 | 0;
+    var webGlTexture = gl.createTexture();
+    if (webGlTexture != null) {
+      this.textureLoaded_1(webGlTexture, width, height, image);
+      var texture = new Texture(webGlTexture, this.shaderProgram, width, height);
+      this.textures.put_xwzc9p$(name, texture);
+      this.loaded = this.loaded + 1 | 0;
+    }
+     else {
+      throw new IllegalStateException("Couldn't create webgl texture!");
+    }
+  };
   Textures.prototype.load_cgi7kw$ = function (mapTileSet) {
   };
-  Textures.prototype.textureLoaded_qtjlcy$ = function (texture, image) {
+  Textures.prototype.textureLoaded_0 = function (texture, image) {
     var gl = Game_getInstance().gl();
     gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, texture);
     gl.pixelStorei(WebGLRenderingContext.UNPACK_FLIP_Y_WEBGL, 1);
     gl.texImage2D(WebGLRenderingContext.TEXTURE_2D, 0, WebGLRenderingContext.RGBA, WebGLRenderingContext.RGBA, WebGLRenderingContext.UNSIGNED_BYTE, image);
+    this.setTextureParameters_0();
+    gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, null);
+  };
+  Textures.prototype.textureLoaded_1 = function (texture, width, height, image) {
+    var gl = Game_getInstance().gl();
+    gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, texture);
+    gl.pixelStorei(WebGLRenderingContext.UNPACK_FLIP_Y_WEBGL, 1);
+    gl.texImage2D(WebGLRenderingContext.TEXTURE_2D, 0, WebGLRenderingContext.RGBA, width, height, 0, WebGLRenderingContext.RGBA, WebGLRenderingContext.UNSIGNED_BYTE, image);
+    this.setTextureParameters_0();
+    gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, null);
+  };
+  Textures.prototype.setTextureParameters_0 = function () {
+    var gl = Game_getInstance().gl();
     if (Game_getInstance().view.drawMode === DrawMode$NEAREST_getInstance()) {
       gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_MAG_FILTER, WebGLRenderingContext.NEAREST);
       gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_MIN_FILTER, WebGLRenderingContext.NEAREST);
@@ -217,7 +258,6 @@ var kudens = function (_, Kotlin) {
     }
     gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_WRAP_T, WebGLRenderingContext.CLAMP_TO_EDGE);
     gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_WRAP_S, WebGLRenderingContext.CLAMP_TO_EDGE);
-    gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, null);
   };
   Textures.prototype.ready = function () {
     return this.loaded === this.startedLoading;
@@ -912,6 +952,82 @@ var kudens = function (_, Kotlin) {
     simpleName: 'View',
     interfaces: []
   };
+  function Color() {
+    Color_instance = this;
+  }
+  Color.prototype.hslToRgb_y2kzbl$ = function (h, s, l) {
+    var r;
+    var g;
+    var b;
+    if (s === 0.0) {
+      b = l;
+      g = b;
+      r = g;
+    }
+     else {
+      var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      var p = 2 * l - q;
+      r = this.hueToRgb_y2kzbl$(p, q, h + 1.0 / 3.0);
+      g = this.hueToRgb_y2kzbl$(p, q, h);
+      b = this.hueToRgb_y2kzbl$(p, q, h - 1.0 / 3.0);
+    }
+    var rgb = [r * 255 | 0, g * 255 | 0, b * 255 | 0];
+    return rgb;
+  };
+  Color.prototype.hueToRgb_y2kzbl$ = function (p, q, t) {
+    var t_0 = t;
+    if (t_0 < 0.0)
+      t_0 += 1.0;
+    if (t_0 > 1.0)
+      t_0 -= 1.0;
+    if (t_0 < 1.0 / 6.0)
+      return p + (q - p) * 6.0 * t_0;
+    if (t_0 < 1.0 / 2.0)
+      return q;
+    if (t_0 < 2.0 / 3.0)
+      return p + (q - p) * (2.0 / 3.0 - t_0) * 6.0;
+    return p;
+  };
+  Color.prototype.rgbToHsl_qt1dr2$ = function (pR, pG, pB) {
+    var r = pR / 255.0;
+    var g = pG / 255.0;
+    var b = pB / 255.0;
+    var max = r > g && r > b ? r : g > b ? g : b;
+    var min = r < g && r < b ? r : g < b ? g : b;
+    var h;
+    var s;
+    var l;
+    l = (max + min) / 2.0;
+    if (max === min) {
+      s = 0.0;
+      h = s;
+    }
+     else {
+      var d = max - min;
+      s = l > 0.5 ? d / (2.0 - max - min) : d / (max + min);
+      if (r > g && r > b)
+        h = (g - b) / d + (g < b ? 6.0 : 0.0);
+      else if (g > b)
+        h = (b - r) / d + 2.0;
+      else
+        h = (r - g) / d + 4.0;
+      h /= 6.0;
+    }
+    var hsl = [h, s, l];
+    return hsl;
+  };
+  Color.$metadata$ = {
+    kind: Kotlin.Kind.OBJECT,
+    simpleName: 'Color',
+    interfaces: []
+  };
+  var Color_instance = null;
+  function Color_getInstance() {
+    if (Color_instance === null) {
+      Color_instance = new Color();
+    }
+    return Color_instance;
+  }
   function KeyCode(name, ordinal, keyCode) {
     Enum.call(this);
     this.keyCode = keyCode;
@@ -1643,6 +1759,10 @@ var kudens = function (_, Kotlin) {
   });
   package$game.ViewType = ViewType;
   package$game.View = View;
+  var package$color = package$persesgames.color || (package$persesgames.color = {});
+  Object.defineProperty(package$color, 'Color', {
+    get: Color_getInstance
+  });
   Object.defineProperty(KeyCode, 'LEFT', {
     get: KeyCode$LEFT_getInstance
   });

@@ -34,6 +34,7 @@ import kotlin.js.Math
  */
 
 private val SCALE = 4f
+
 class WelcomeScreen : Screen() {
     var sprites = SpriteBatch()
     var blue = Sprite("BLUE")
@@ -68,10 +69,10 @@ class WelcomeScreen : Screen() {
 
 fun main(args: Array<String>) {
     Game.view.setToWidth(160f*SCALE)
-    Game.view.drawMode = DrawMode.LINEAR
+    Game.view.drawMode = DrawMode.NEAREST
 
     Game.view.minAspectRatio = 160f/240f
     Game.view.maxAspectRatio = 160f/240f
 
-    Game.start(WelcomeScreen())
+    Game.start(GameScreen())
 }

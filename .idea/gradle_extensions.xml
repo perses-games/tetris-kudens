@@ -11,7 +11,9 @@
             <ext name="reporting" type="org.gradle.api.reporting.ReportingExtension" />
             <ext name="sources" type="org.gradle.language.base.internal.DefaultProjectSourceSet" />
             <ext name="binaries" type="org.gradle.platform.base.internal.DefaultBinaryContainer" objectType="org.gradle.api.internal.jvm.DefaultClassDirectoryBinarySpec" />
+            <prop name="nexusPassword" />
             <prop name="kotlin_version" />
+            <prop name="nexusUsername" />
             <task name="components" type="org.gradle.api.reporting.components.ComponentReport">Displays the components produced by root project 'tetris-kudens'. [incubating]&lt;p&gt;&lt;i&gt;Task group: help&lt;i&gt;</task>
             <task name="buildDependents">Assembles and tests this project and all projects that depend on it.&lt;p&gt;&lt;i&gt;Task group: build&lt;i&gt;</task>
             <task name="projects" type="org.gradle.api.tasks.diagnostics.ProjectReportTask">Displays the sub-projects of root project 'tetris-kudens'.&lt;p&gt;&lt;i&gt;Task group: help&lt;i&gt;</task>
