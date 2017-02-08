@@ -10,27 +10,6 @@ import com.persesgames.texture.Textures
 import kotlin.js.Math
 
 /**
- * Shapes:
- *
- * OOOO
- *
- * OO
- *  OO
- *
- *  OO
- * OO
- *
- * OO
- * OO
- *
- * O
- * OOO
- *
- *   O
- * OOO
- *
- *  O
- * OOO
  */
 
 private val SCALE = 4f

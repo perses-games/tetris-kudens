@@ -2,6 +2,9 @@ package games.perses.tetris
 
 import com.persesgames.game.Game
 import com.persesgames.game.Screen
+import com.persesgames.input.InputProcessor
+import com.persesgames.input.KeyCode
+import com.persesgames.input.Keys
 import com.persesgames.sprite.Sprite
 import com.persesgames.sprite.SpriteBatch
 import com.persesgames.texture.Textures
@@ -13,13 +16,13 @@ import com.persesgames.texture.Textures
  */
 
 enum class PieceType(val positions: Array<Pair<Int, Int>>) {
-    I(arrayOf(0 to 0, -1 to 0, 1 to 0, 2 to 0)),
-    J(arrayOf(0 to 0, -1 to 0, 1 to 0, 1 to 1)),
-    L(arrayOf(0 to 0)),
-    O(arrayOf(0 to 0)),
-    S(arrayOf(0 to 0)),
-    T(arrayOf(0 to 0)),
-    Z(arrayOf(0 to 0));
+    I(arrayOf(0 to 0, -1 to  0, 1 to  0,  2 to  0)),
+    J(arrayOf(0 to 0, -1 to  0, 1 to  0,  1 to  1)),
+    L(arrayOf(0 to 0, -1 to -1, 1 to  0,  2 to  0)),
+    O(arrayOf(0 to 0,  1 to  0, 0 to  1,  1 to  1)),
+    S(arrayOf(0 to 0,  1 to  0, 0 to -1, -1 to -1)),
+    T(arrayOf(0 to 0, -1 to  0, 1 to  0,  0 to -1)),
+    Z(arrayOf(0 to 0, -1 to  0, 0 to -1,  1 to -1));
 
     fun getPositions(orientation: Int): Array<Pair<Int, Int>> {
         val result = Array(positions.size, { 0 to 0 })
@@ -30,13 +33,13 @@ enum class PieceType(val positions: Array<Pair<Int, Int>>) {
                     result[index] = positions[index].first to positions[index].second
                 }
                 1 -> {
-                    result[index] = positions[index].second to positions[index].first
+                    result[index] = positions[index].second to -positions[index].first
                 }
                 2 -> {
-                    result[index] = -positions[index].first to positions[index].second
+                    result[index] = -positions[index].first to -positions[index].second
                 }
                 3 -> {
-                    result[index] = positions[index].second to -positions[index].first
+                    result[index] = -positions[index].second to positions[index].first
                 }
             }
         }
@@ -50,63 +53,99 @@ class Piece(val type: PieceType) {
     var x = 5
     var y = 22
 
-    fun clear(playfield: Array<Array<String>>) {
-        for (position in type.getPositions(orientation)) {
-            val xx = x + position.first
-            val yy = y + position.second
-
-            if (playfield.size > yy) {
-                val line = playfield[yy]
-
-                if (line.size > xx) {
-                    line[xx] = " "
-                }
-            }
-        }
+    fun moveLeft() {
+        // todo: check boundaries
+        x--
     }
 
-    fun draw(playfield: Array<Array<String>>) {
-        for (position in type.getPositions(orientation)) {
-            val xx = x + position.first
-            val yy = y + position.second
-
-            if (playfield.size > yy) {
-                val line = playfield[yy]
-
-                if (line.size > xx) {
-                    println("draw: $xx, $yy -> ${type.name}")
-                    line[xx] = type.name
-                }
-            }
-        }
+    fun moveRight() {
+        // check edge
+        x++
     }
 
-    fun moveLeft(playfield: Array<Array<String>>) {
-
-    }
-
-    fun moveRight(playfield: Array<Array<String>>) {
-
-    }
-
-    fun moveDown(playfield: Array<Array<String>>) {
-        clear(playfield)
+    fun moveDown() {
         y -= 1
-        draw(playfield)
+        println("move down: $y")
     }
 
-    fun turn(playfield: Array<Array<String>>) {
-        clear(playfield)
+    fun canMoveDown(playfield: Array<Array<String>>): Boolean {
+        var result = true
+        val positions = type.getPositions(orientation)
+
+        for (pos in positions) {
+            if (y + pos.second - 1 < 0 || x + pos.first < 0 || x + pos.first > 9) {
+                println("Can't move down outside screen (${x+pos.first}, ${y+pos.second-1})")
+                return false
+            }
+
+            println("Playfield [${y + pos.second - 1}][${x + pos.first}] == [${playfield[y + pos.second - 1][x + pos.first]}]")
+            result = result and (playfield[y + pos.second - 1][x + pos.first] == " ")
+        }
+
+        println("Can move down result: $result")
+        return result
+    }
+
+    fun canMoveLeft(playfield: Array<Array<String>>): Boolean {
+        var result = true
+        val positions = type.getPositions(orientation)
+
+        for (pos in positions) {
+            if (y + pos.second < 0 || x + pos.first - 1< 0 || x + pos.first - 1 > 9) {
+                return false
+            }
+
+            result = result and (playfield[y + pos.second][x + pos.first - 1] == " ")
+        }
+
+        return result
+    }
+
+    fun canMoveRight(playfield: Array<Array<String>>): Boolean {
+        var result = true
+        val positions = type.getPositions(orientation)
+
+        for (pos in positions) {
+            if (y + pos.second < 0 || x + pos.first + 1 < 0 || x + pos.first + 1 > 9) {
+                return false
+            }
+
+            result = result and (playfield[y + pos.second][x + pos.first + 1] == " ")
+        }
+
+        return result
+    }
+
+    fun canTurn(playfield: Array<Array<String>>): Boolean {
+        var result = true
+        var newOrient = orientation + 1
+
+        if (newOrient > 3) {
+            newOrient -= 4
+        }
+        val positions = type.getPositions(newOrient)
+
+        for (pos in positions) {
+            if (y + pos.second < 0 || x + pos.first < 0 || x + pos.first > 9) {
+                return false
+            }
+
+            result = result and (playfield[y + pos.second][x + pos.first] == " ")
+        }
+
+        return result
+    }
+
+    fun turn() {
         orientation += 1
         // mod operation missing infix in Int (?)
         if (orientation > 3) {
             orientation -= 4
         }
-        draw(playfield)
     }
 }
 
-class GameScreen : Screen() {
+class GameScreen : Screen(), InputProcessor {
     var sprites = SpriteBatch()
     var playfield = Array(22, { Array(10, { " " } ) })
     var blocks = mapOf(
@@ -118,10 +157,10 @@ class GameScreen : Screen() {
       "T" to Sprite("T"),
       "Z" to Sprite("Z")
     )
-    var timePerTick = 2.5f
-    var timeTillNextTick = 1f
+    var timePerTick = 1f
+    var timeTillNextTick = timePerTick
 
-    var piece = Piece(PieceType.J)
+    var piece = Piece(PieceType.Z)
 
     override fun loadResources() {
         Textures.create("RED", 8, 8, Block.create(0f))
@@ -140,24 +179,63 @@ class GameScreen : Screen() {
 
         piece.y = 10
         piece.orientation = 3
-        piece.draw(playfield)
 
         playfield[0] = arrayOf("I", "I", "I", "I", "I", "I", "I")
+
+        Keys.setInputProcessor(this)
     }
 
-    override fun update(time: Float, delta: Float) {
-        timeTillNextTick -= delta
-        if (timeTillNextTick < 0f) {
-            timeTillNextTick += timePerTick
+    override fun keyDown(keyCode: Int) {}
 
+    override fun keyPressed(charCode: Int) {
+        println("keypress: $charCode")
+        when(charCode) {
+            KeyCode.LEFT.keyCode -> {
+                if (piece.canMoveLeft(playfield)) {
+                    piece.moveLeft()
+                }
+            }
+            KeyCode.RIGHT.keyCode -> {
+                if (piece.canMoveLeft(playfield)) {
+                    piece.moveLeft()
+                }
+            }
+            KeyCode.UP.keyCode -> {
+                if (piece.canTurn(playfield)) {
+                    piece.turn()
+                }
+            }
+            KeyCode.DOWN.keyCode -> {
+                if (piece.canMoveDown(playfield)) {
+                    piece.moveDown()
+                }
+            }
+        }
+    }
+
+    override fun keyUp(keyCode: Int) {}
+
+    override fun pointerClick(pointer: Int, x: Float, y: Float) {}
+
+    override fun update(time: Float, delta: Float) {
+        var tick = false
+        timeTillNextTick -= delta
+        while (timeTillNextTick < 0f) {
+            timeTillNextTick += timePerTick
+            tick = true
+        }
+
+        if (tick) {
             tick()
         }
     }
 
     fun tick() {
-        piece.turn(playfield)
-        piece.moveDown(playfield)
-
+        println("tick")
+        if (piece.canMoveDown(playfield)) {
+            println("move-down")
+            piece.moveDown()
+        }
     }
 
     override fun render() {
@@ -172,6 +250,15 @@ class GameScreen : Screen() {
                 x += 80f
             }
             y += 80f
+        }
+
+        val px = piece.x * 80f + 40f
+        val py = piece.y * 80f + 40f
+        val block = blocks[piece.type.name];
+        if (block != null) {
+            for (position in piece.type.getPositions(piece.orientation)) {
+                sprites.draw(block, px + position.first * 80f, py + position.second * 80f, scale = 10f)
+            }
         }
 
         sprites.render()
