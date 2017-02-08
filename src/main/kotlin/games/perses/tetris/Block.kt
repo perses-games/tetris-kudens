@@ -14,7 +14,7 @@ private val LIGHT   = 0.6f
 private val NORMAL  = 0.5f
 private val DARK    = 0.4f
 
-private val SATURATION = 0.5f
+private val SATURATION = 0.75f
 
 object Block {
 

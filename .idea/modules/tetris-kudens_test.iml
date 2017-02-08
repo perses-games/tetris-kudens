@@ -7,14 +7,14 @@
           <KotlinCompilerInfo>
             <option name="compilerSettings">
               <CompilerSettings>
-                <option name="additionalArguments" value="$MODULE_DIR$/../../web/js/generated/tetris.js /home/rnentjes/.gradle/caches/modules-2/files-2.1/com.persesgames/kudens/1.0.0-SNAPSHOT/5d19789015d3984dd895230e1e6b39e8cf7f2fff/kudens-1.0.0-SNAPSHOT.jar:/home/rnentjes/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-js/1.1.0-beta-38/dea46fa0ee81d4e90f45867a7dc81557979479f3/kotlin-stdlib-js-1.1.0-beta-38.jar: v5 plain call" />
+                <option name="additionalArguments" value="$MODULE_DIR$/../../web/js/generated/tetris.js /home/rnentjes/.gradle/caches/modules-2/files-2.1/com.persesgames/kudens/1.0.0-SNAPSHOT/f0cb040f51a23d3d0e0940e6e5d093fcbf6cfb68/kudens-1.0.0-SNAPSHOT.jar:/home/rnentjes/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-js/1.1.0-beta-38/dea46fa0ee81d4e90f45867a7dc81557979479f3/kotlin-stdlib-js-1.1.0-beta-38.jar: v5 plain call" />
               </CompilerSettings>
             </option>
             <option name="k2jsCompilerArguments">
               <K2JSCompilerArguments>
                 <option name="outputFile" value="$MODULE_DIR$/../../web/js/generated/tetris.js" />
                 <option name="noStdlib" value="true" />
-                <option name="libraries" value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.persesgames/kudens/1.0.0-SNAPSHOT/5d19789015d3984dd895230e1e6b39e8cf7f2fff/kudens-1.0.0-SNAPSHOT.jar:/home/rnentjes/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-js/1.1.0-beta-38/dea46fa0ee81d4e90f45867a7dc81557979479f3/kotlin-stdlib-js-1.1.0-beta-38.jar:" />
+                <option name="libraries" value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.persesgames/kudens/1.0.0-SNAPSHOT/f0cb040f51a23d3d0e0940e6e5d093fcbf6cfb68/kudens-1.0.0-SNAPSHOT.jar:/home/rnentjes/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-js/1.1.0-beta-38/dea46fa0ee81d4e90f45867a7dc81557979479f3/kotlin-stdlib-js-1.1.0-beta-38.jar:" />
                 <option name="sourceMap" value="true" />
                 <option name="metaInfo" value="true" />
                 <option name="target" value="v5" />
@@ -43,7 +43,7 @@
                 <option name="freeArgs">
                   <list>
                     <option value="$MODULE_DIR$/../../web/js/generated/tetris.js" />
-                    <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.persesgames/kudens/1.0.0-SNAPSHOT/5d19789015d3984dd895230e1e6b39e8cf7f2fff/kudens-1.0.0-SNAPSHOT.jar:/home/rnentjes/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-js/1.1.0-beta-38/dea46fa0ee81d4e90f45867a7dc81557979479f3/kotlin-stdlib-js-1.1.0-beta-38.jar:" />
+                    <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.persesgames/kudens/1.0.0-SNAPSHOT/f0cb040f51a23d3d0e0940e6e5d093fcbf6cfb68/kudens-1.0.0-SNAPSHOT.jar:/home/rnentjes/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-js/1.1.0-beta-38/dea46fa0ee81d4e90f45867a7dc81557979479f3/kotlin-stdlib-js-1.1.0-beta-38.jar:" />
                     <option value="v5" />
                     <option value="plain" />
                     <option value="call" />

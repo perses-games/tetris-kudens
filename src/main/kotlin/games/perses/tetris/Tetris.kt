@@ -68,11 +68,11 @@ class WelcomeScreen : Screen() {
 }
 
 fun main(args: Array<String>) {
-    Game.view.setToWidth(160f*SCALE)
-    Game.view.drawMode = DrawMode.NEAREST
+    Game.view.setToWidth(800f)
+    Game.view.drawMode = DrawMode.LINEAR
 
-    Game.view.minAspectRatio = 160f/240f
-    Game.view.maxAspectRatio = 160f/240f
+    Game.view.minAspectRatio = 160f/320f
+    Game.view.maxAspectRatio = 160f/320f
 
     Game.start(GameScreen())
 }

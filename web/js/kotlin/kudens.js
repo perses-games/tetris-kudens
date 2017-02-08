@@ -600,6 +600,10 @@ var kudens = function (_, Kotlin) {
     this.currentTime = this.start;
     this.currentDelta = 0.0;
     this.pause = false;
+    this.clearRed = 0.0;
+    this.clearGreen = 0.0;
+    this.clearBlue = 0.0;
+    this.clearAlpha = 0.0;
     this.fps = 0;
     this.fpsCount = 0;
     this.fpsCountTime = 0.0;
@@ -649,6 +653,12 @@ var kudens = function (_, Kotlin) {
     this.currentScreen = screen;
     this.currentScreen.loadResources();
   };
+  Game.prototype.setClearColor_7b5o5w$ = function (r, g, b, a) {
+    this.clearRed = r;
+    this.clearGreen = g;
+    this.clearBlue = b;
+    this.clearAlpha = a;
+  };
   function Game$gameLoop$lambda(this$Game) {
     return function (it) {
       this$Game.gameLoop();
@@ -663,7 +673,7 @@ var kudens = function (_, Kotlin) {
       this.resize();
       if (!this.pause) {
         this.html.canvas2d.clearRect(0.0, 0.0, this.view.width, this.view.height);
-        Game_getInstance().gl().clearColor(0.0, 0.0, 0.0, 1.0);
+        Game_getInstance().gl().clearColor(this.clearRed, this.clearGreen, this.clearBlue, this.clearAlpha);
         Game_getInstance().gl().clear(WebGLRenderingContext.COLOR_BUFFER_BIT);
         Game_getInstance().gl().enable(WebGLRenderingContext.BLEND);
         Game_getInstance().gl().blendFunc(WebGLRenderingContext.SRC_ALPHA, WebGLRenderingContext.ONE_MINUS_SRC_ALPHA);
@@ -975,17 +985,22 @@ var kudens = function (_, Kotlin) {
     return rgb;
   };
   Color.prototype.hueToRgb_y2kzbl$ = function (p, q, t) {
-    var t_0 = t;
-    if (t_0 < 0.0)
-      t_0 += 1.0;
-    if (t_0 > 1.0)
-      t_0 -= 1.0;
-    if (t_0 < 1.0 / 6.0)
-      return p + (q - p) * 6.0 * t_0;
-    if (t_0 < 1.0 / 2.0)
+    var lt = t;
+    if (lt < 0.0) {
+      lt += 1.0;
+    }
+    if (lt > 1.0) {
+      lt -= 1.0;
+    }
+    if (lt < 1.0 / 6.0) {
+      return p + (q - p) * 6.0 * lt;
+    }
+    if (lt < 1.0 / 2.0) {
       return q;
-    if (t_0 < 2.0 / 3.0)
-      return p + (q - p) * (2.0 / 3.0 - t_0) * 6.0;
+    }
+    if (lt < 2.0 / 3.0) {
+      return p + (q - p) * (2.0 / 3.0 - lt) * 6.0;
+    }
     return p;
   };
   Color.prototype.rgbToHsl_qt1dr2$ = function (pR, pG, pB) {
