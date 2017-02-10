@@ -8,6 +8,7 @@ import com.persesgames.input.Keys
 import com.persesgames.sprite.Sprite
 import com.persesgames.sprite.SpriteBatch
 import com.persesgames.texture.Textures
+import kotlin.js.Math
 
 /**
  * User: rnentjes
@@ -16,13 +17,13 @@ import com.persesgames.texture.Textures
  */
 
 enum class PieceType(val positions: Array<Pair<Int, Int>>) {
-    I(arrayOf(0 to 0, -1 to  0, 1 to  0,  2 to  0)),
-    J(arrayOf(0 to 0, -1 to  0, 1 to  0,  1 to  1)),
-    L(arrayOf(0 to 0, -1 to -1, 1 to  0,  2 to  0)),
-    O(arrayOf(0 to 0,  1 to  0, 0 to  1,  1 to  1)),
-    S(arrayOf(0 to 0,  1 to  0, 0 to -1, -1 to -1)),
-    T(arrayOf(0 to 0, -1 to  0, 1 to  0,  0 to -1)),
-    Z(arrayOf(0 to 0, -1 to  0, 0 to -1,  1 to -1));
+    I(arrayOf(0 to 0, -1 to  0,  1 to  0,  2 to  0)),
+    J(arrayOf(0 to 0, -1 to  0,  1 to  0,  1 to  1)),
+    L(arrayOf(0 to 0, -1 to  0, -1 to -1,  1 to  0)),
+    O(arrayOf(0 to 0,  1 to  0,  0 to  1,  1 to  1)),
+    S(arrayOf(0 to 0,  1 to  0,  0 to -1, -1 to -1)),
+    T(arrayOf(0 to 0, -1 to  0,  1 to  0,  0 to -1)),
+    Z(arrayOf(0 to 0, -1 to  0,  0 to -1,  1 to -1));
 
     fun getPositions(orientation: Int): Array<Pair<Int, Int>> {
         val result = Array(positions.size, { 0 to 0 })
@@ -48,10 +49,11 @@ enum class PieceType(val positions: Array<Pair<Int, Int>>) {
     }
 }
 
-class Piece(val type: PieceType) {
+class Piece() {
+    var type = PieceType.values()[(Math.random() * PieceType.values().size).toInt()]
     var orientation = 0
     var x = 5
-    var y = 22
+    var y = 21
 
     fun moveLeft() {
         // todo: check boundaries
@@ -65,7 +67,6 @@ class Piece(val type: PieceType) {
 
     fun moveDown() {
         y -= 1
-        println("move down: $y")
     }
 
     fun canMoveDown(playfield: Array<Array<String>>): Boolean {
@@ -74,15 +75,12 @@ class Piece(val type: PieceType) {
 
         for (pos in positions) {
             if (y + pos.second - 1 < 0 || x + pos.first < 0 || x + pos.first > 9) {
-                println("Can't move down outside screen (${x+pos.first}, ${y+pos.second-1})")
                 return false
             }
 
-            println("Playfield [${y + pos.second - 1}][${x + pos.first}] == [${playfield[y + pos.second - 1][x + pos.first]}]")
             result = result and (playfield[y + pos.second - 1][x + pos.first] == " ")
         }
 
-        println("Can move down result: $result")
         return result
     }
 
@@ -91,7 +89,7 @@ class Piece(val type: PieceType) {
         val positions = type.getPositions(orientation)
 
         for (pos in positions) {
-            if (y + pos.second < 0 || x + pos.first - 1< 0 || x + pos.first - 1 > 9) {
+            if (y + pos.second < 0 || y + pos.second > 21  || x + pos.first - 1< 0 || x + pos.first - 1 > 9) {
                 return false
             }
 
@@ -106,7 +104,7 @@ class Piece(val type: PieceType) {
         val positions = type.getPositions(orientation)
 
         for (pos in positions) {
-            if (y + pos.second < 0 || x + pos.first + 1 < 0 || x + pos.first + 1 > 9) {
+            if (y + pos.second < 0 || y + pos.second > 21  || x + pos.first + 1 < 0 || x + pos.first + 1 > 9) {
                 return false
             }
 
@@ -126,7 +124,7 @@ class Piece(val type: PieceType) {
         val positions = type.getPositions(newOrient)
 
         for (pos in positions) {
-            if (y + pos.second < 0 || x + pos.first < 0 || x + pos.first > 9) {
+            if (y + pos.second < 0 || y + pos.second > 21 || x + pos.first < 0 || x + pos.first > 9) {
                 return false
             }
 
@@ -142,6 +140,18 @@ class Piece(val type: PieceType) {
         if (orientation > 3) {
             orientation -= 4
         }
+    }
+
+    fun nextPiece(playfield: Array<Array<String>>) {
+        for (pos in type.getPositions(orientation)) {
+            playfield[pos.second+y][pos.first+x] = type.name
+        }
+
+        orientation = 0
+        x = 5
+        y = 21
+
+        type = PieceType.values()[(Math.random() * PieceType.values().size).toInt()]
     }
 }
 
@@ -160,9 +170,13 @@ class GameScreen : Screen(), InputProcessor {
     var timePerTick = 1f
     var timeTillNextTick = timePerTick
 
-    var piece = Piece(PieceType.Z)
+    private val keys: MutableMap<Int, Int> = HashMap()
+
+    var piece = Piece()
 
     override fun loadResources() {
+        Keys.setInputProcessor(this)
+
         Textures.create("RED", 8, 8, Block.create(0f))
         Textures.create("GREEN", 8, 8, Block.create(0.33f))
         Textures.create("BLUE", 8, 8, Block.create(0.66f))
@@ -177,15 +191,11 @@ class GameScreen : Screen(), InputProcessor {
 
         Game.setClearColor(1f, 1f, 1f, 1f)
 
-        piece.y = 10
-        piece.orientation = 3
-
-        playfield[0] = arrayOf("I", "I", "I", "I", "I", "I", "I")
-
-        Keys.setInputProcessor(this)
+        playfield[0] = arrayOf("I", "I", "I", "I", "I", "I", "I", "I", "I", "I")
     }
 
-    override fun keyDown(keyCode: Int) {}
+    override fun keyDown(keyCode: Int) {
+    }
 
     override fun keyPressed(charCode: Int) {
         println("keypress: $charCode")
@@ -217,6 +227,26 @@ class GameScreen : Screen(), InputProcessor {
 
     override fun pointerClick(pointer: Int, x: Float, y: Float) {}
 
+    private fun checkInput(delta: Float) {
+        if (Keys.wasPressed(KeyCode.LEFT.keyCode, (delta * 1000).toDouble())) {
+            if (piece.canMoveLeft(playfield)) {
+                piece.moveLeft()
+            }
+        } else if (Keys.wasPressed(KeyCode.RIGHT.keyCode, (delta * 1000).toDouble())) {
+            if (piece.canMoveRight(playfield)) {
+                piece.moveRight()
+            }
+        } else if (Keys.wasPressed(KeyCode.UP.keyCode, (delta * 1000).toDouble())) {
+            if (piece.canTurn(playfield)) {
+                piece.turn()
+            }
+        } else if (Keys.wasPressed(KeyCode.DOWN.keyCode, (delta * 1000).toDouble())) {
+            if (piece.canMoveDown(playfield)) {
+                piece.moveDown()
+            }
+        }
+    }
+
     override fun update(time: Float, delta: Float) {
         var tick = false
         timeTillNextTick -= delta
@@ -225,15 +255,25 @@ class GameScreen : Screen(), InputProcessor {
             tick = true
         }
 
+        checkInput(delta)
+
         if (tick) {
+            if (!piece.canMoveDown(playfield)) {
+                nextPiece()
+            }
+
             tick()
         }
     }
 
+    private fun nextPiece() {
+        piece.nextPiece(playfield)
+
+        removeFilledLines()
+    }
+
     fun tick() {
-        println("tick")
         if (piece.canMoveDown(playfield)) {
-            println("move-down")
             piece.moveDown()
         }
     }
@@ -264,5 +304,35 @@ class GameScreen : Screen(), InputProcessor {
         sprites.render()
     }
 
+    private fun removeFilledLines() {
+        val toRemove = ArrayList<Int>()
+
+        for (y in 0..21) {
+            var empty = false
+            for (x in 0..9) {
+                if (playfield[y][x] == " ") {
+                    empty = true
+                    break
+                }
+            }
+            if (!empty) {
+                toRemove.add(y)
+            }
+        }
+
+        var linesRemoved = 0
+        while (!toRemove.isEmpty()) {
+            val line = toRemove.removeAt(0) - linesRemoved
+            println("remove line $line")
+
+            for (y in line..20) {
+                playfield[y] = playfield[y + 1]
+            }
+
+            playfield[21] = Array(10, { " " })
+            linesRemoved++
+        }
+
+    }
 
 }

@@ -19,7 +19,9 @@ var tetris = function (_, Kotlin, $module$kudens) {
   var println = Kotlin.kotlin.io.println_s8jyv4$;
   var input_0 = $module$kudens.com.persesgames.input;
   var KeyCode = $module$kudens.com.persesgames.input.KeyCode;
+  var ArrayList_init = Kotlin.kotlin.collections.ArrayList_init_ww73n8$;
   var mapOf = Kotlin.kotlin.collections.mapOf_qfcya0$;
+  var HashMap_init = Kotlin.kotlin.collections.HashMap_init_q3lmfv$;
   var InputProcessor = $module$kudens.com.persesgames.input.InputProcessor;
   WelcomeScreen.prototype = Object.create(Screen.prototype);
   WelcomeScreen.prototype.constructor = WelcomeScreen;
@@ -101,7 +103,7 @@ var tetris = function (_, Kotlin, $module$kudens) {
   };
   function main(args) {
     game_0.Game.view.setToWidth_mx4ult$(800.0);
-    game_0.Game.view.drawMode = DrawMode.LINEAR;
+    game_0.Game.view.drawMode = DrawMode.NEAREST;
     game_0.Game.view.minAspectRatio = 160.0 / 320.0;
     game_0.Game.view.maxAspectRatio = 160.0 / 320.0;
     game_0.Game.start_ocgj3q$(new GameScreen());
@@ -117,7 +119,7 @@ var tetris = function (_, Kotlin, $module$kudens) {
     };
     PieceType$I_instance = new PieceType('I', 0, [to(0, 0), to(-1, 0), to(1, 0), to(2, 0)]);
     PieceType$J_instance = new PieceType('J', 1, [to(0, 0), to(-1, 0), to(1, 0), to(1, 1)]);
-    PieceType$L_instance = new PieceType('L', 2, [to(0, 0), to(-1, -1), to(1, 0), to(2, 0)]);
+    PieceType$L_instance = new PieceType('L', 2, [to(0, 0), to(-1, 0), to(-1, -1), to(1, 0)]);
     PieceType$O_instance = new PieceType('O', 3, [to(0, 0), to(1, 0), to(0, 1), to(1, 1)]);
     PieceType$S_instance = new PieceType('S', 4, [to(0, 0), to(1, 0), to(0, -1), to(-1, -1)]);
     PieceType$T_instance = new PieceType('T', 5, [to(0, 0), to(-1, 0), to(1, 0), to(0, -1)]);
@@ -206,11 +208,11 @@ var tetris = function (_, Kotlin, $module$kudens) {
     }
   }
   PieceType.valueOf_61zpoe$ = PieceType$valueOf;
-  function Piece(type) {
-    this.type = type;
+  function Piece() {
+    this.type = PieceType$values()[Math.random() * PieceType$values().length | 0];
     this.orientation = 0;
     this.x = 5;
-    this.y = 22;
+    this.y = 21;
   }
   Piece.prototype.moveLeft = function () {
     this.x = this.x - 1 | 0;
@@ -229,13 +231,10 @@ var tetris = function (_, Kotlin, $module$kudens) {
     for (tmp$ = 0; tmp$ !== positions.length; ++tmp$) {
       var pos = positions[tmp$];
       if ((this.y + pos.second - 1 | 0) < 0 || (this.x + pos.first | 0) < 0 || (this.x + pos.first | 0) > 9) {
-        println("Can't move down outside screen (" + (this.x + pos.first | 0) + ', ' + (this.y + pos.second - 1 | 0) + ')');
         return false;
       }
-      println('Playfield [' + (this.y + pos.second - 1 | 0) + '][' + (this.x + pos.first | 0) + '] == [' + playfield[this.y + pos.second - 1 | 0][this.x + pos.first | 0] + ']');
       result = (result && Kotlin.equals(playfield[this.y + pos.second - 1 | 0][this.x + pos.first | 0], ' '));
     }
-    println('Can move down result: ' + result);
     return result;
   };
   Piece.prototype.canMoveLeft_bwh3i6$ = function (playfield) {
@@ -244,7 +243,7 @@ var tetris = function (_, Kotlin, $module$kudens) {
     var positions = this.type.getPositions_za3lpa$(this.orientation);
     for (tmp$ = 0; tmp$ !== positions.length; ++tmp$) {
       var pos = positions[tmp$];
-      if ((this.y + pos.second | 0) < 0 || (this.x + pos.first - 1 | 0) < 0 || (this.x + pos.first - 1 | 0) > 9) {
+      if ((this.y + pos.second | 0) < 0 || (this.y + pos.second | 0) > 21 || (this.x + pos.first - 1 | 0) < 0 || (this.x + pos.first - 1 | 0) > 9) {
         return false;
       }
       result = (result && Kotlin.equals(playfield[this.y + pos.second | 0][this.x + pos.first - 1 | 0], ' '));
@@ -257,7 +256,7 @@ var tetris = function (_, Kotlin, $module$kudens) {
     var positions = this.type.getPositions_za3lpa$(this.orientation);
     for (tmp$ = 0; tmp$ !== positions.length; ++tmp$) {
       var pos = positions[tmp$];
-      if ((this.y + pos.second | 0) < 0 || (this.x + pos.first + 1 | 0) < 0 || (this.x + pos.first + 1 | 0) > 9) {
+      if ((this.y + pos.second | 0) < 0 || (this.y + pos.second | 0) > 21 || (this.x + pos.first + 1 | 0) < 0 || (this.x + pos.first + 1 | 0) > 9) {
         return false;
       }
       result = (result && Kotlin.equals(playfield[this.y + pos.second | 0][this.x + pos.first + 1 | 0], ' '));
@@ -274,7 +273,7 @@ var tetris = function (_, Kotlin, $module$kudens) {
     var positions = this.type.getPositions_za3lpa$(newOrient);
     for (tmp$ = 0; tmp$ !== positions.length; ++tmp$) {
       var pos = positions[tmp$];
-      if ((this.y + pos.second | 0) < 0 || (this.x + pos.first | 0) < 0 || (this.x + pos.first | 0) > 9) {
+      if ((this.y + pos.second | 0) < 0 || (this.y + pos.second | 0) > 21 || (this.x + pos.first | 0) < 0 || (this.x + pos.first | 0) > 9) {
         return false;
       }
       result = (result && Kotlin.equals(playfield[this.y + pos.second | 0][this.x + pos.first | 0], ' '));
@@ -286,6 +285,18 @@ var tetris = function (_, Kotlin, $module$kudens) {
     if (this.orientation > 3) {
       this.orientation = this.orientation - 4 | 0;
     }
+  };
+  Piece.prototype.nextPiece_bwh3i6$ = function (playfield) {
+    var tmp$, tmp$_0;
+    tmp$ = this.type.getPositions_za3lpa$(this.orientation);
+    for (tmp$_0 = 0; tmp$_0 !== tmp$.length; ++tmp$_0) {
+      var pos = tmp$[tmp$_0];
+      playfield[pos.second + this.y | 0][pos.first + this.x | 0] = this.type.name;
+    }
+    this.orientation = 0;
+    this.x = 5;
+    this.y = 21;
+    this.type = PieceType$values()[Math.random() * PieceType$values().length | 0];
   };
   Piece.$metadata$ = {
     kind: Kotlin.Kind.CLASS,
@@ -299,9 +310,11 @@ var tetris = function (_, Kotlin, $module$kudens) {
     this.blocks = mapOf([to('I', new Sprite('I')), to('J', new Sprite('J')), to('L', new Sprite('L')), to('O', new Sprite('O')), to('S', new Sprite('S')), to('T', new Sprite('T')), to('Z', new Sprite('Z'))]);
     this.timePerTick = 1.0;
     this.timeTillNextTick = this.timePerTick;
-    this.piece = new Piece(PieceType$Z_getInstance());
+    this.keys_0 = HashMap_init();
+    this.piece = new Piece();
   }
   GameScreen.prototype.loadResources = function () {
+    input_0.Keys.setInputProcessor_wjqqmu$(this);
     texture_0.Textures.create_56dudh$('RED', 8, 8, Block_getInstance().create_mx4ult$(0.0));
     texture_0.Textures.create_56dudh$('GREEN', 8, 8, Block_getInstance().create_mx4ult$(0.33));
     texture_0.Textures.create_56dudh$('BLUE', 8, 8, Block_getInstance().create_mx4ult$(0.66));
@@ -313,10 +326,7 @@ var tetris = function (_, Kotlin, $module$kudens) {
     texture_0.Textures.create_56dudh$('T', 8, 8, Block_getInstance().create_mx4ult$(0.75));
     texture_0.Textures.create_56dudh$('Z', 8, 8, Block_getInstance().create_mx4ult$(0.0));
     game_0.Game.setClearColor_7b5o5w$(1.0, 1.0, 1.0, 1.0);
-    this.piece.y = 10;
-    this.piece.orientation = 3;
-    this.playfield[0] = ['I', 'I', 'I', 'I', 'I', 'I', 'I'];
-    input_0.Keys.setInputProcessor_wjqqmu$(this);
+    this.playfield[0] = ['I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I'];
   };
   GameScreen.prototype.keyDown_za3lpa$ = function (keyCode) {
   };
@@ -346,6 +356,28 @@ var tetris = function (_, Kotlin, $module$kudens) {
   };
   GameScreen.prototype.pointerClick_nhq4am$ = function (pointer, x, y) {
   };
+  GameScreen.prototype.checkInput_0 = function (delta) {
+    if (input_0.Keys.wasPressed_5wr77w$(KeyCode.LEFT.keyCode, delta * 1000)) {
+      if (this.piece.canMoveLeft_bwh3i6$(this.playfield)) {
+        this.piece.moveLeft();
+      }
+    }
+     else if (input_0.Keys.wasPressed_5wr77w$(KeyCode.RIGHT.keyCode, delta * 1000)) {
+      if (this.piece.canMoveRight_bwh3i6$(this.playfield)) {
+        this.piece.moveRight();
+      }
+    }
+     else if (input_0.Keys.wasPressed_5wr77w$(KeyCode.UP.keyCode, delta * 1000)) {
+      if (this.piece.canTurn_bwh3i6$(this.playfield)) {
+        this.piece.turn();
+      }
+    }
+     else if (input_0.Keys.wasPressed_5wr77w$(KeyCode.DOWN.keyCode, delta * 1000)) {
+      if (this.piece.canMoveDown_bwh3i6$(this.playfield)) {
+        this.piece.moveDown();
+      }
+    }
+  };
   GameScreen.prototype.update_dleff0$ = function (time, delta) {
     var tick = false;
     this.timeTillNextTick -= delta;
@@ -353,14 +385,20 @@ var tetris = function (_, Kotlin, $module$kudens) {
       this.timeTillNextTick += this.timePerTick;
       tick = true;
     }
+    this.checkInput_0(delta);
     if (tick) {
+      if (!this.piece.canMoveDown_bwh3i6$(this.playfield)) {
+        this.nextPiece_0();
+      }
       this.tick();
     }
   };
+  GameScreen.prototype.nextPiece_0 = function () {
+    this.piece.nextPiece_bwh3i6$(this.playfield);
+    this.removeFilledLines_0();
+  };
   GameScreen.prototype.tick = function () {
-    println('tick');
     if (this.piece.canMoveDown_bwh3i6$(this.playfield)) {
-      println('move-down');
       this.piece.moveDown();
     }
   };
@@ -392,6 +430,34 @@ var tetris = function (_, Kotlin, $module$kudens) {
       }
     }
     this.sprites.render();
+  };
+  function GameScreen$removeFilledLines$lambda(it) {
+    return ' ';
+  }
+  GameScreen.prototype.removeFilledLines_0 = function () {
+    var toRemove = ArrayList_init();
+    for (var y = 0; y <= 21; y++) {
+      var empty = false;
+      for (var x = 0; x <= 9; x++) {
+        if (Kotlin.equals(this.playfield[y][x], ' ')) {
+          empty = true;
+          break;
+        }
+      }
+      if (!empty) {
+        toRemove.add_11rb$(y);
+      }
+    }
+    var linesRemoved = 0;
+    while (!toRemove.isEmpty()) {
+      var line = toRemove.removeAt_za3lpa$(0) - linesRemoved | 0;
+      println('remove line ' + line);
+      for (var y_0 = line; y_0 <= 20; y_0++) {
+        this.playfield[y_0] = this.playfield[y_0 + 1 | 0];
+      }
+      this.playfield[21] = Kotlin.newArrayF(10, GameScreen$removeFilledLines$lambda);
+      linesRemoved = linesRemoved + 1 | 0;
+    }
   };
   function GameScreen$playfield$lambda$lambda(it) {
     return ' ';
