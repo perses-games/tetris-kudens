@@ -16,8 +16,8 @@ var tetris = function (_, Kotlin, $module$kudens) {
   var DrawMode = $module$kudens.com.persesgames.game.DrawMode;
   var to = Kotlin.kotlin.to_ujzrz7$;
   var Enum = Kotlin.kotlin.Enum;
-  var println = Kotlin.kotlin.io.println_s8jyv4$;
   var input_0 = $module$kudens.com.persesgames.input;
+  var println = Kotlin.kotlin.io.println_s8jyv4$;
   var KeyCode = $module$kudens.com.persesgames.input.KeyCode;
   var ArrayList_init = Kotlin.kotlin.collections.ArrayList_init_ww73n8$;
   var mapOf = Kotlin.kotlin.collections.mapOf_qfcya0$;
@@ -41,6 +41,26 @@ var tetris = function (_, Kotlin, $module$kudens) {
     var light = color_0.Color.hslToRgb_y2kzbl$(hue, SATURATION, LIGHT);
     var normal = color_0.Color.hslToRgb_y2kzbl$(hue, SATURATION, NORMAL);
     var dark = color_0.Color.hslToRgb_y2kzbl$(hue, SATURATION, DARK);
+    for (var index = 0; index <= 7; index++) {
+      array.set([Kotlin.toByte(light[0]), Kotlin.toByte(light[1]), Kotlin.toByte(light[2]), Kotlin.toByte(255)], 4 * ((index * 8 | 0) + 0 | 0) | 0);
+      array.set([Kotlin.toByte(dark[0]), Kotlin.toByte(dark[1]), Kotlin.toByte(dark[2]), Kotlin.toByte(255)], 4 * ((index * 8 | 0) + 7 | 0) | 0);
+    }
+    for (var index_0 = 1; index_0 <= 6; index_0++) {
+      array.set([Kotlin.toByte(light[0]), Kotlin.toByte(light[1]), Kotlin.toByte(light[2]), Kotlin.toByte(255)], 4 * ((0 * 8 | 0) + index_0 | 0) | 0);
+      array.set([Kotlin.toByte(dark[0]), Kotlin.toByte(dark[1]), Kotlin.toByte(dark[2]), Kotlin.toByte(255)], 4 * ((7 * 8 | 0) + index_0 | 0) | 0);
+    }
+    for (var x = 1; x <= 6; x++) {
+      for (var y = 1; y <= 6; y++) {
+        array.set([Kotlin.toByte(normal[0]), Kotlin.toByte(normal[1]), Kotlin.toByte(normal[2]), Kotlin.toByte(255)], 4 * ((y * 8 | 0) + x | 0) | 0);
+      }
+    }
+    return array;
+  };
+  Block.prototype.createGrey_mx4ult$ = function (lightness) {
+    var array = new Uint8Array((4 * 8 | 0) * 8 | 0);
+    var light = color_0.Color.hslToRgb_y2kzbl$(0.0, 0.0, lightness + 0.1);
+    var normal = color_0.Color.hslToRgb_y2kzbl$(0.0, 0.0, lightness);
+    var dark = color_0.Color.hslToRgb_y2kzbl$(0.0, 0.0, lightness - 0.1);
     for (var index = 0; index <= 7; index++) {
       array.set([Kotlin.toByte(light[0]), Kotlin.toByte(light[1]), Kotlin.toByte(light[2]), Kotlin.toByte(255)], 4 * ((index * 8 | 0) + 0 | 0) | 0);
       array.set([Kotlin.toByte(dark[0]), Kotlin.toByte(dark[1]), Kotlin.toByte(dark[2]), Kotlin.toByte(255)], 4 * ((index * 8 | 0) + 7 | 0) | 0);
@@ -222,7 +242,6 @@ var tetris = function (_, Kotlin, $module$kudens) {
   };
   Piece.prototype.moveDown = function () {
     this.y = this.y - 1 | 0;
-    println('move down: ' + this.y);
   };
   Piece.prototype.canMoveDown_bwh3i6$ = function (playfield) {
     var tmp$;
@@ -310,7 +329,9 @@ var tetris = function (_, Kotlin, $module$kudens) {
     this.blocks = mapOf([to('I', new Sprite('I')), to('J', new Sprite('J')), to('L', new Sprite('L')), to('O', new Sprite('O')), to('S', new Sprite('S')), to('T', new Sprite('T')), to('Z', new Sprite('Z'))]);
     this.timePerTick = 1.0;
     this.timeTillNextTick = this.timePerTick;
+    this.greyBlocks = [new Sprite(''), new Sprite('GREY_1'), new Sprite('GREY_2'), new Sprite('GREY_3'), new Sprite('GREY_4'), new Sprite('GREY_5'), new Sprite('GREY_6'), new Sprite('GREY_7'), new Sprite('GREY_8'), new Sprite('GREY_9')];
     this.keys_0 = HashMap_init();
+    this.deltaY = 0;
     this.piece = new Piece();
   }
   GameScreen.prototype.loadResources = function () {
@@ -318,6 +339,15 @@ var tetris = function (_, Kotlin, $module$kudens) {
     texture_0.Textures.create_56dudh$('RED', 8, 8, Block_getInstance().create_mx4ult$(0.0));
     texture_0.Textures.create_56dudh$('GREEN', 8, 8, Block_getInstance().create_mx4ult$(0.33));
     texture_0.Textures.create_56dudh$('BLUE', 8, 8, Block_getInstance().create_mx4ult$(0.66));
+    texture_0.Textures.create_56dudh$('GREY_9', 8, 8, Block_getInstance().createGrey_mx4ult$(0.9));
+    texture_0.Textures.create_56dudh$('GREY_8', 8, 8, Block_getInstance().createGrey_mx4ult$(0.8));
+    texture_0.Textures.create_56dudh$('GREY_7', 8, 8, Block_getInstance().createGrey_mx4ult$(0.7));
+    texture_0.Textures.create_56dudh$('GREY_6', 8, 8, Block_getInstance().createGrey_mx4ult$(0.6));
+    texture_0.Textures.create_56dudh$('GREY_5', 8, 8, Block_getInstance().createGrey_mx4ult$(0.5));
+    texture_0.Textures.create_56dudh$('GREY_4', 8, 8, Block_getInstance().createGrey_mx4ult$(0.4));
+    texture_0.Textures.create_56dudh$('GREY_3', 8, 8, Block_getInstance().createGrey_mx4ult$(0.3));
+    texture_0.Textures.create_56dudh$('GREY_2', 8, 8, Block_getInstance().createGrey_mx4ult$(0.2));
+    texture_0.Textures.create_56dudh$('GREY_1', 8, 8, Block_getInstance().createGrey_mx4ult$(0.1));
     texture_0.Textures.create_56dudh$('I', 8, 8, Block_getInstance().create_mx4ult$(0.5));
     texture_0.Textures.create_56dudh$('J', 8, 8, Block_getInstance().create_mx4ult$(0.625));
     texture_0.Textures.create_56dudh$('L', 8, 8, Block_getInstance().create_mx4ult$(0.0625));
@@ -326,7 +356,6 @@ var tetris = function (_, Kotlin, $module$kudens) {
     texture_0.Textures.create_56dudh$('T', 8, 8, Block_getInstance().create_mx4ult$(0.75));
     texture_0.Textures.create_56dudh$('Z', 8, 8, Block_getInstance().create_mx4ult$(0.0));
     game_0.Game.setClearColor_7b5o5w$(1.0, 1.0, 1.0, 1.0);
-    this.playfield[0] = ['I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I'];
   };
   GameScreen.prototype.keyDown_za3lpa$ = function (keyCode) {
   };
@@ -392,6 +421,10 @@ var tetris = function (_, Kotlin, $module$kudens) {
       }
       this.tick();
     }
+    this.deltaY = this.deltaY + (delta * 80.0 | 0) | 0;
+    while (this.deltaY > 320) {
+      this.deltaY = this.deltaY - 320 | 0;
+    }
   };
   GameScreen.prototype.nextPiece_0 = function () {
     this.piece.nextPiece_bwh3i6$(this.playfield);
@@ -402,22 +435,48 @@ var tetris = function (_, Kotlin, $module$kudens) {
       this.piece.moveDown();
     }
   };
+  GameScreen.prototype.drawGrey_0 = function (x, y, c) {
+    this.sprites.draw_xrfpo0$(this.greyBlocks[c], 40.0 + x * 80.0, -this.deltaY + 40.0 + y * 80.0, 10.0);
+  };
   GameScreen.prototype.render = function () {
     var tmp$, tmp$_0, tmp$_1, tmp$_2, tmp$_3;
-    var y = 40.0;
+    for (var x = 0; x <= 2; x++) {
+      for (var y = 0; y <= 5; y++) {
+        var xx = x * 4 | 0;
+        var yy = y * 4 | 0;
+        this.drawGrey_0(xx + 0 | 0, yy + 0 | 0, 4);
+        this.drawGrey_0(xx + 1 | 0, yy + 0 | 0, 4);
+        this.drawGrey_0(xx + 1 | 0, yy + 1 | 0, 4);
+        this.drawGrey_0(xx + 2 | 0, yy + 0 | 0, 4);
+        this.drawGrey_0(xx + 0 | 0, yy + 1 | 0, 3);
+        this.drawGrey_0(xx + 0 | 0, yy + 2 | 0, 3);
+        this.drawGrey_0(xx + 1 | 0, yy + 2 | 0, 3);
+        this.drawGrey_0(xx + 0 | 0, yy + 3 | 0, 3);
+        this.drawGrey_0(xx + 1 | 0, yy + 3 | 0, 1);
+        this.drawGrey_0(xx + 2 | 0, yy + 3 | 0, 1);
+        this.drawGrey_0(xx + 2 | 0, yy + 2 | 0, 1);
+        this.drawGrey_0(xx + 3 | 0, yy + 3 | 0, 1);
+        this.drawGrey_0(xx + 3 | 0, yy + 0 | 0, 2);
+        this.drawGrey_0(xx + 3 | 0, yy + 1 | 0, 2);
+        this.drawGrey_0(xx + 2 | 0, yy + 1 | 0, 2);
+        this.drawGrey_0(xx + 3 | 0, yy + 2 | 0, 2);
+      }
+    }
+    this.sprites.render();
+    var y_0 = 40.0;
     tmp$ = this.playfield.length - 1 | 0;
     for (var line = 0; line <= tmp$; line++) {
-      var x = 40.0;
+      var x_0 = 40.0;
       tmp$_0 = this.playfield[line];
       for (tmp$_1 = 0; tmp$_1 !== tmp$_0.length; ++tmp$_1) {
         var char = tmp$_0[tmp$_1];
         var block = this.blocks.get_11rb$(char);
         if (block != null) {
-          this.sprites.draw_xrfpo0$(block, x, y, 10.0);
+          this.sprites.draw_xrfpo0$(block, x_0, y_0, 10.0);
         }
-        x += 80.0;
+        x_0 += 80.0;
       }
-      y += 80.0;
+      y_0 += 80.0;
     }
     var px = this.piece.x * 80.0 + 40.0;
     var py = this.piece.y * 80.0 + 40.0;

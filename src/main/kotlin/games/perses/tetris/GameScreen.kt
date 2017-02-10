@@ -170,7 +170,11 @@ class GameScreen : Screen(), InputProcessor {
     var timePerTick = 1f
     var timeTillNextTick = timePerTick
 
+    var greyBlocks = arrayOf(
+      Sprite(""), Sprite("GREY_1"), Sprite("GREY_2"), Sprite("GREY_3"), Sprite("GREY_4"),
+      Sprite("GREY_5"), Sprite("GREY_6"), Sprite("GREY_7"), Sprite("GREY_8"), Sprite("GREY_9") )
     private val keys: MutableMap<Int, Int> = HashMap()
+    var deltaY = 0
 
     var piece = Piece()
 
@@ -181,6 +185,16 @@ class GameScreen : Screen(), InputProcessor {
         Textures.create("GREEN", 8, 8, Block.create(0.33f))
         Textures.create("BLUE", 8, 8, Block.create(0.66f))
 
+        Textures.create("GREY_9", 8, 8, Block.createGrey(0.9f))
+        Textures.create("GREY_8", 8, 8, Block.createGrey(0.8f))
+        Textures.create("GREY_7", 8, 8, Block.createGrey(0.7f))
+        Textures.create("GREY_6", 8, 8, Block.createGrey(0.6f))
+        Textures.create("GREY_5", 8, 8, Block.createGrey(0.5f))
+        Textures.create("GREY_4", 8, 8, Block.createGrey(0.4f))
+        Textures.create("GREY_3", 8, 8, Block.createGrey(0.3f))
+        Textures.create("GREY_2", 8, 8, Block.createGrey(0.2f))
+        Textures.create("GREY_1", 8, 8, Block.createGrey(0.1f))
+
         Textures.create("I", 8, 8, Block.create(0.5f))
         Textures.create("J", 8, 8, Block.create(0.625f))
         Textures.create("L", 8, 8, Block.create(0.0625f))
@@ -190,8 +204,6 @@ class GameScreen : Screen(), InputProcessor {
         Textures.create("Z", 8, 8, Block.create(0f))
 
         Game.setClearColor(1f, 1f, 1f, 1f)
-
-        playfield[0] = arrayOf("I", "I", "I", "I", "I", "I", "I", "I", "I", "I")
     }
 
     override fun keyDown(keyCode: Int) {
@@ -264,6 +276,11 @@ class GameScreen : Screen(), InputProcessor {
 
             tick()
         }
+
+        deltaY = deltaY + (delta * 80f).toInt()
+        while (deltaY > 320) {
+            deltaY -= 320
+        }
     }
 
     private fun nextPiece() {
@@ -278,7 +295,37 @@ class GameScreen : Screen(), InputProcessor {
         }
     }
 
+    private fun drawGrey(x: Int, y: Int, c: Int) {
+        sprites.draw(greyBlocks[c], 40f + x * 80f, - deltaY + 40f + y * 80f, scale = 10f)
+    }
+
     override fun render() {
+        for (x in 0..2) {
+            for (y in 0..5) {
+                val xx = x * 4
+                val yy = y * 4
+
+                drawGrey(xx + 0, yy + 0, 4)
+                drawGrey(xx + 1, yy + 0, 4)
+                drawGrey(xx + 1, yy + 1, 4)
+                drawGrey(xx + 2, yy + 0, 4)
+                drawGrey(xx + 0, yy + 1, 3)
+                drawGrey(xx + 0, yy + 2, 3)
+                drawGrey(xx + 1, yy + 2, 3)
+                drawGrey(xx + 0, yy + 3, 3)
+                drawGrey(xx + 1, yy + 3, 1)
+                drawGrey(xx + 2, yy + 3, 1)
+                drawGrey(xx + 2, yy + 2, 1)
+                drawGrey(xx + 3, yy + 3, 1)
+                drawGrey(xx + 3, yy + 0, 2)
+                drawGrey(xx + 3, yy + 1, 2)
+                drawGrey(xx + 2, yy + 1, 2)
+                drawGrey(xx + 3, yy + 2, 2)
+            }
+        }
+
+        sprites.render()
+
         var y = 40f
         for (line in 0..playfield.size-1) {
             var x = 40f

@@ -44,4 +44,29 @@ object Block {
         return array
     }
 
+    fun createGrey(lightness: Float): Uint8Array {
+        val array = Uint8Array(4*8*8)
+
+        val light = Color.hslToRgb(0f, 0f, lightness + 0.1f)
+        val normal = Color.hslToRgb(0f, 0f, lightness)
+        val dark = Color.hslToRgb(0f, 0f, lightness - 0.1f)
+
+        for (index in 0..7) {
+            array.set(arrayOf(light[0].toByte(), light[1].toByte(), light[2].toByte(), 255.toByte()), 4 * (index * 8 + 0))
+            array.set(arrayOf(dark[0].toByte(), dark[1].toByte(), dark[2].toByte(), 255.toByte()), 4 * (index * 8 + 7))
+        }
+
+        for (index in 1..6) {
+            array.set(arrayOf(light[0].toByte(), light[1].toByte(), light[2].toByte(), 255.toByte()), 4 * (0 * 8 + index))
+            array.set(arrayOf(dark[0].toByte(), dark[1].toByte(), dark[2].toByte(), 255.toByte()), 4 * (7 * 8 + index))
+        }
+
+        for (x in 1..6) {
+            for (y in 1..6) {
+                array.set(arrayOf(normal[0].toByte(), normal[1].toByte(), normal[2].toByte(), 255.toByte()), 4 * (y * 8 + x))
+            }
+        }
+
+        return array
+    }
 }
