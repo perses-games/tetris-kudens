@@ -84,7 +84,7 @@ var tetris = function (_, Kotlin, $module$kudens) {
   var Block_instance = null;
   function Block_getInstance() {
     if (Block_instance === null) {
-      Block_instance = new Block();
+      new Block();
     }
     return Block_instance;
   }

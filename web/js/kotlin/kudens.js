@@ -5,7 +5,6 @@ var kudens = function (_, Kotlin) {
   'use strict';
   var Enum = Kotlin.kotlin.Enum;
   var HashMap_init = Kotlin.kotlin.collections.HashMap_init_q3lmfv$;
-  var on = Kotlin.kotlin.dom.on_viwgf2$;
   var IllegalStateException = Kotlin.kotlin.IllegalStateException;
   var lazy = Kotlin.kotlin.lazy_klfg04$;
   var IllegalArgumentException = Kotlin.kotlin.IllegalArgumentException;
@@ -130,13 +129,13 @@ var kudens = function (_, Kotlin) {
     this.inputProcesser_0 = new EmptyInputProcessor();
     var body = document.body;
     if (body != null) {
-      on(body, 'keydown', true, Keys_init$lambda);
-      on(body, 'keyup', true, Keys_init$lambda_0);
-      on(body, 'keypress', true, Keys_init$lambda_1);
-      on(body, 'click', true, Keys_init$lambda_2);
-      on(body, 'mousedown', true, Keys_init$lambda_3);
-      on(body, 'mouseup', true, Keys_init$lambda_4);
-      on(body, 'mousemove', true, Keys_init$lambda_5);
+      body.onkeydown = Keys_init$lambda;
+      body.onkeyup = Keys_init$lambda_0;
+      body.onkeypress = Keys_init$lambda_1;
+      body.onclick = Keys_init$lambda_2;
+      body.onmousedown = Keys_init$lambda_3;
+      body.onmouseup = Keys_init$lambda_4;
+      body.onmousemove = Keys_init$lambda_5;
     }
      else {
       console.log("Can't register key events, document.body is null!?");
@@ -214,7 +213,7 @@ var kudens = function (_, Kotlin) {
   var Keys_instance = null;
   function Keys_getInstance() {
     if (Keys_instance === null) {
-      Keys_instance = new Keys();
+      new Keys();
     }
     return Keys_instance;
   }
@@ -453,7 +452,7 @@ var kudens = function (_, Kotlin) {
   var Color_instance = null;
   function Color_getInstance() {
     if (Color_instance === null) {
-      Color_instance = new Color();
+      new Color();
     }
     return Color_instance;
   }
@@ -526,7 +525,7 @@ var kudens = function (_, Kotlin) {
   var Texts_instance = null;
   function Texts_getInstance() {
     if (Texts_instance === null) {
-      Texts_instance = new Texts();
+      new Texts();
     }
     return Texts_instance;
   }
@@ -1348,7 +1347,7 @@ var kudens = function (_, Kotlin) {
   var Game_instance = null;
   function Game_getInstance() {
     if (Game_instance === null) {
-      Game_instance = new Game();
+      new Game();
     }
     return Game_instance;
   }
@@ -1590,7 +1589,7 @@ var kudens = function (_, Kotlin) {
   var Textures_instance = null;
   function Textures_getInstance() {
     if (Textures_instance === null) {
-      Textures_instance = new Textures();
+      new Textures();
     }
     return Textures_instance;
   }
@@ -1675,7 +1674,7 @@ var kudens = function (_, Kotlin) {
   var Sounds_instance = null;
   function Sounds_getInstance() {
     if (Sounds_instance === null) {
-      Sounds_instance = new Sounds();
+      new Sounds();
     }
     return Sounds_instance;
   }
@@ -1693,11 +1692,11 @@ var kudens = function (_, Kotlin) {
     return function (it) {
       if (closure$looping) {
         closure$audio.currentTime = 0.0;
-        closure$audio.play();
+        return closure$audio.play();
       }
        else {
         closure$audio.remove();
-        this$Music.playing.remove_11rb$(closure$audio);
+        return this$Music.playing.remove_11rb$(closure$audio);
       }
     };
   }
@@ -1711,7 +1710,7 @@ var kudens = function (_, Kotlin) {
     audio.src = url;
     audio.volume = volume;
     audio.play();
-    on(audio, 'ended', true, Music$play$lambda(looping, audio, this));
+    audio.onended = Music$play$lambda(looping, audio, this);
     return audio;
   };
   Music.prototype.stopAll = function () {
@@ -1724,7 +1723,7 @@ var kudens = function (_, Kotlin) {
   var Music_instance = null;
   function Music_getInstance() {
     if (Music_instance === null) {
-      Music_instance = new Music();
+      new Music();
     }
     return Music_instance;
   }
