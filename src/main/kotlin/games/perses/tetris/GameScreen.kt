@@ -1,5 +1,6 @@
 package games.perses.tetris
 
+import com.persesgames.color.Color
 import com.persesgames.game.Game
 import com.persesgames.game.Screen
 import com.persesgames.input.InputProcessor
@@ -7,153 +8,14 @@ import com.persesgames.input.KeyCode
 import com.persesgames.input.Keys
 import com.persesgames.sprite.Sprite
 import com.persesgames.sprite.SpriteBatch
+import com.persesgames.text.Texts
 import com.persesgames.texture.Textures
-import kotlin.js.Math
 
 /**
  * User: rnentjes
  * Date: 8-2-17
  * Time: 11:51
  */
-
-enum class PieceType(val positions: Array<Pair<Int, Int>>) {
-    I(arrayOf(0 to 0, -1 to  0,  1 to  0,  2 to  0)),
-    J(arrayOf(0 to 0, -1 to  0,  1 to  0,  1 to  1)),
-    L(arrayOf(0 to 0, -1 to  0, -1 to -1,  1 to  0)),
-    O(arrayOf(0 to 0,  1 to  0,  0 to  1,  1 to  1)),
-    S(arrayOf(0 to 0,  1 to  0,  0 to -1, -1 to -1)),
-    T(arrayOf(0 to 0, -1 to  0,  1 to  0,  0 to -1)),
-    Z(arrayOf(0 to 0, -1 to  0,  0 to -1,  1 to -1));
-
-    fun getPositions(orientation: Int): Array<Pair<Int, Int>> {
-        val result = Array(positions.size, { 0 to 0 })
-
-        for (index in 0..result.size-1) {
-            when(orientation) {
-                0 -> {
-                    result[index] = positions[index].first to positions[index].second
-                }
-                1 -> {
-                    result[index] = positions[index].second to -positions[index].first
-                }
-                2 -> {
-                    result[index] = -positions[index].first to -positions[index].second
-                }
-                3 -> {
-                    result[index] = -positions[index].second to positions[index].first
-                }
-            }
-        }
-
-        return result
-    }
-}
-
-class Piece() {
-    var type = PieceType.values()[(Math.random() * PieceType.values().size).toInt()]
-    var orientation = 0
-    var x = 5
-    var y = 21
-
-    fun moveLeft() {
-        // todo: check boundaries
-        x--
-    }
-
-    fun moveRight() {
-        // check edge
-        x++
-    }
-
-    fun moveDown() {
-        y -= 1
-    }
-
-    fun canMoveDown(playfield: Array<Array<String>>): Boolean {
-        var result = true
-        val positions = type.getPositions(orientation)
-
-        for (pos in positions) {
-            if (y + pos.second - 1 < 0 || x + pos.first < 0 || x + pos.first > 9) {
-                return false
-            }
-
-            result = result and (playfield[y + pos.second - 1][x + pos.first] == " ")
-        }
-
-        return result
-    }
-
-    fun canMoveLeft(playfield: Array<Array<String>>): Boolean {
-        var result = true
-        val positions = type.getPositions(orientation)
-
-        for (pos in positions) {
-            if (y + pos.second < 0 || y + pos.second > 21  || x + pos.first - 1< 0 || x + pos.first - 1 > 9) {
-                return false
-            }
-
-            result = result and (playfield[y + pos.second][x + pos.first - 1] == " ")
-        }
-
-        return result
-    }
-
-    fun canMoveRight(playfield: Array<Array<String>>): Boolean {
-        var result = true
-        val positions = type.getPositions(orientation)
-
-        for (pos in positions) {
-            if (y + pos.second < 0 || y + pos.second > 21  || x + pos.first + 1 < 0 || x + pos.first + 1 > 9) {
-                return false
-            }
-
-            result = result and (playfield[y + pos.second][x + pos.first + 1] == " ")
-        }
-
-        return result
-    }
-
-    fun canTurn(playfield: Array<Array<String>>): Boolean {
-        var result = true
-        var newOrient = orientation + 1
-
-        if (newOrient > 3) {
-            newOrient -= 4
-        }
-        val positions = type.getPositions(newOrient)
-
-        for (pos in positions) {
-            if (y + pos.second < 0 || y + pos.second > 21 || x + pos.first < 0 || x + pos.first > 9) {
-                return false
-            }
-
-            result = result and (playfield[y + pos.second][x + pos.first] == " ")
-        }
-
-        return result
-    }
-
-    fun turn() {
-        orientation += 1
-        // mod operation missing infix in Int (?)
-        if (orientation > 3) {
-            orientation -= 4
-        }
-    }
-
-    fun nextPiece(playfield: Array<Array<String>>) {
-        for (pos in type.getPositions(orientation)) {
-            playfield[pos.second+y][pos.first+x] = type.name
-        }
-
-        orientation = 0
-        x = 5
-        y = 21
-
-        type = PieceType.values()[(Math.random() * PieceType.values().size).toInt()]
-    }
-}
 
 class GameScreen : Screen(), InputProcessor {
     var sprites = SpriteBatch()
@@ -169,6 +31,10 @@ class GameScreen : Screen(), InputProcessor {
     )
     var timePerTick = 1f
     var timeTillNextTick = timePerTick
+    var score = Score()
+    var shadowColor = Color.hslToRgb(0.125f, SATURATION, SHADOW)
+    var textColor = Color.hslToRgb(0.125f, SATURATION, NORMAL)
+    var gameOver = false
 
     var greyBlocks = arrayOf(
       Sprite(""), Sprite("GREY_1"), Sprite("GREY_2"), Sprite("GREY_3"), Sprite("GREY_4"),
@@ -255,6 +121,7 @@ class GameScreen : Screen(), InputProcessor {
         } else if (Keys.wasPressed(KeyCode.DOWN.keyCode, (delta * 1000).toDouble())) {
             if (piece.canMoveDown(playfield)) {
                 piece.moveDown()
+                score.tick()
             }
         }
     }
@@ -267,11 +134,19 @@ class GameScreen : Screen(), InputProcessor {
             tick = true
         }
 
+        if (gameOver) {
+            return
+        }
+
         checkInput(delta)
 
         if (tick) {
             if (!piece.canMoveDown(playfield)) {
-                nextPiece()
+                if (piece.y == 21) {
+                    gameOver = true
+                } else {
+                    nextPiece()
+                }
             }
 
             tick()
@@ -293,6 +168,7 @@ class GameScreen : Screen(), InputProcessor {
         if (piece.canMoveDown(playfield)) {
             piece.moveDown()
         }
+        score.tick()
     }
 
     private fun drawGrey(x: Int, y: Int, c: Int) {
@@ -349,6 +225,15 @@ class GameScreen : Screen(), InputProcessor {
         }
 
         sprites.render()
+
+        val fs = score.formatted()
+        Texts.drawText(10f, 58f, fs, font = "bold 48pt Arial", fillStyle = "rgba(${shadowColor[0]}, ${shadowColor[1]}, ${shadowColor[2]}, 1)")
+        Texts.drawText(7f, 55f, fs, font = "bold 48pt Arial", fillStyle = "rgba(${textColor[0]}, ${textColor[0]}, ${textColor[0]}, 0.9)")
+
+        if (gameOver) {
+            Texts.drawText(53f, 803f, "GAME OVER!", font = "bold 80pt Arial", fillStyle = "rgba(55,0,0,1)")
+            Texts.drawText(50f, 800f, "GAME OVER!", font = "bold 80pt Arial", fillStyle = "rgba(255,0,0,0.9)")
+        }
     }
 
     private fun removeFilledLines() {
@@ -380,6 +265,7 @@ class GameScreen : Screen(), InputProcessor {
             linesRemoved++
         }
 
+        score.linesRemoved(linesRemoved)
     }
 
 }

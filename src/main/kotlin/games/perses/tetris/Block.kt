@@ -1,8 +1,7 @@
 package games.perses.tetris
 
-import org.khronos.webgl.Uint8Array
-import kotlin.js.Math
 import com.persesgames.color.Color
+import org.khronos.webgl.Uint8Array
 
 /**
  * User: rnentjes
@@ -10,11 +9,12 @@ import com.persesgames.color.Color
  * Time: 12:17
  */
 
-private val LIGHT   = 0.6f
-private val NORMAL  = 0.5f
-private val DARK    = 0.4f
+val LIGHT   = 0.6f
+val NORMAL  = 0.5f
+val DARK    = 0.4f
+val SHADOW  = 0.2f
 
-private val SATURATION = 0.75f
+val SATURATION = 0.75f
 
 object Block {
 
