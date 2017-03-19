@@ -1,15 +1,15 @@
 package games.perses.tetris
 
-import com.persesgames.color.Color
-import com.persesgames.game.Game
-import com.persesgames.game.Screen
-import com.persesgames.input.InputProcessor
-import com.persesgames.input.KeyCode
-import com.persesgames.input.Keys
-import com.persesgames.sprite.Sprite
-import com.persesgames.sprite.SpriteBatch
-import com.persesgames.text.Texts
-import com.persesgames.texture.Textures
+import games.perses.color.Color
+import games.perses.game.Game
+import games.perses.game.Screen
+import games.perses.input.InputProcessor
+import games.perses.input.KeyCode
+import games.perses.input.Keys
+import games.perses.sprite.Sprite
+import games.perses.sprite.SpriteBatch
+import games.perses.text.Texts
+import games.perses.texture.Textures
 
 /**
  * User: rnentjes

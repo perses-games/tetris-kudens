@@ -1,12 +1,12 @@
 package games.perses.tetris
 
-import com.persesgames.game.DrawMode
-import com.persesgames.game.Game
-import com.persesgames.game.Screen
-import com.persesgames.sprite.Sprite
-import com.persesgames.sprite.SpriteBatch
-import com.persesgames.text.Texts
-import com.persesgames.texture.Textures
+import games.perses.game.DrawMode
+import games.perses.game.Game
+import games.perses.game.Screen
+import games.perses.sprite.Sprite
+import games.perses.sprite.SpriteBatch
+import games.perses.text.Texts
+import games.perses.texture.Textures
 import kotlin.js.Math
 
 /**

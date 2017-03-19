@@ -6,23 +6,23 @@ if (typeof kudens === 'undefined') {
 }
 var tetris = function (_, Kotlin, $module$kudens) {
   'use strict';
-  var input_0 = $module$kudens.com.persesgames.input;
-  var texture_0 = $module$kudens.com.persesgames.texture;
-  var game_0 = $module$kudens.com.persesgames.game;
+  var input_0 = $module$kudens.games.perses.input;
+  var texture_0 = $module$kudens.games.perses.texture;
+  var game_0 = $module$kudens.games.perses.game;
   var println = Kotlin.kotlin.io.println_s8jyv4$;
-  var KeyCode = $module$kudens.com.persesgames.input.KeyCode;
-  var text_0 = $module$kudens.com.persesgames.text;
+  var KeyCode = $module$kudens.games.perses.input.KeyCode;
+  var text_0 = $module$kudens.games.perses.text;
   var ArrayList_init = Kotlin.kotlin.collections.ArrayList_init_ww73n8$;
-  var Screen = $module$kudens.com.persesgames.game.Screen;
-  var SpriteBatch = $module$kudens.com.persesgames.sprite.SpriteBatch;
-  var Sprite = $module$kudens.com.persesgames.sprite.Sprite;
+  var Screen = $module$kudens.games.perses.game.Screen;
+  var SpriteBatch = $module$kudens.games.perses.sprite.SpriteBatch;
+  var Sprite = $module$kudens.games.perses.sprite.Sprite;
   var to = Kotlin.kotlin.to_ujzrz7$;
   var mapOf = Kotlin.kotlin.collections.mapOf_qfcya0$;
-  var color_0 = $module$kudens.com.persesgames.color;
+  var color_0 = $module$kudens.games.perses.color;
   var HashMap_init = Kotlin.kotlin.collections.HashMap_init_q3lmfv$;
-  var InputProcessor = $module$kudens.com.persesgames.input.InputProcessor;
+  var InputProcessor = $module$kudens.games.perses.input.InputProcessor;
   var Enum = Kotlin.kotlin.Enum;
-  var DrawMode = $module$kudens.com.persesgames.game.DrawMode;
+  var DrawMode = $module$kudens.games.perses.game.DrawMode;
   GameScreen.prototype = Object.create(Screen.prototype);
   GameScreen.prototype.constructor = GameScreen;
   PieceType.prototype = Object.create(Enum.prototype);
@@ -46,7 +46,7 @@ var tetris = function (_, Kotlin, $module$kudens) {
     this.piece = new Piece();
   }
   GameScreen.prototype.loadResources = function () {
-    input_0.Keys.setInputProcessor_wjqqmu$(this);
+    input_0.Keys.setInputProcessor_809zsn$(this);
     texture_0.Textures.create_56dudh$('RED', 8, 8, Block_getInstance().create_mx4ult$(0.0));
     texture_0.Textures.create_56dudh$('GREEN', 8, 8, Block_getInstance().create_mx4ult$(0.33));
     texture_0.Textures.create_56dudh$('BLUE', 8, 8, Block_getInstance().create_mx4ult$(0.66));
@@ -157,7 +157,7 @@ var tetris = function (_, Kotlin, $module$kudens) {
     this.score.tick();
   };
   GameScreen.prototype.drawGrey_0 = function (x, y, c) {
-    this.sprites.draw_xrfpo0$(this.greyBlocks[c], 40.0 + x * 80.0, -this.deltaY + 40.0 + y * 80.0, 10.0);
+    this.sprites.draw_kjwdzj$(this.greyBlocks[c], 40.0 + x * 80.0, -this.deltaY + 40.0 + y * 80.0, 10.0);
   };
   GameScreen.prototype.render = function () {
     var tmp$, tmp$_0, tmp$_1, tmp$_2, tmp$_3;
@@ -193,7 +193,7 @@ var tetris = function (_, Kotlin, $module$kudens) {
         var char = tmp$_0[tmp$_1];
         var block = this.blocks.get_11rb$(char);
         if (block != null) {
-          this.sprites.draw_xrfpo0$(block, x_0, y_0, 10.0);
+          this.sprites.draw_kjwdzj$(block, x_0, y_0, 10.0);
         }
         x_0 += 80.0;
       }
@@ -206,7 +206,7 @@ var tetris = function (_, Kotlin, $module$kudens) {
       tmp$_2 = this.piece.type.getPositions_za3lpa$(this.piece.orientation);
       for (tmp$_3 = 0; tmp$_3 !== tmp$_2.length; ++tmp$_3) {
         var position = tmp$_2[tmp$_3];
-        this.sprites.draw_xrfpo0$(block_0, px + position.first * 80.0, py + position.second * 80.0, 10.0);
+        this.sprites.draw_kjwdzj$(block_0, px + position.first * 80.0, py + position.second * 80.0, 10.0);
       }
     }
     this.sprites.render();
@@ -378,8 +378,8 @@ var tetris = function (_, Kotlin, $module$kudens) {
   WelcomeScreen.prototype.render = function () {
     for (var x = 5; x <= 14; x++) {
       for (var y = 1; y <= 9; y++) {
-        this.sprites.draw_xrfpo0$(this.blue, x * 8.0 * SCALE + this.deltaX, y * 8.0 * SCALE + this.deltaY, SCALE * 1.075);
-        this.sprites.draw_xrfpo0$(this.red, x * 8.0 * SCALE, 100.0 * SCALE + y * 8.0 * SCALE, SCALE * 1.075);
+        this.sprites.draw_kjwdzj$(this.blue, x * 8.0 * SCALE + this.deltaX, y * 8.0 * SCALE + this.deltaY, SCALE * 1.075);
+        this.sprites.draw_kjwdzj$(this.red, x * 8.0 * SCALE, 100.0 * SCALE + y * 8.0 * SCALE, SCALE * 1.075);
       }
     }
     this.sprites.render();
@@ -396,7 +396,7 @@ var tetris = function (_, Kotlin, $module$kudens) {
     game_0.Game.view.drawMode = DrawMode.NEAREST;
     game_0.Game.view.minAspectRatio = 160.0 / 320.0;
     game_0.Game.view.maxAspectRatio = 160.0 / 320.0;
-    game_0.Game.start_ocgj3q$(new GameScreen());
+    game_0.Game.start_lbnb05$(new GameScreen());
   }
   var LIGHT;
   var NORMAL;

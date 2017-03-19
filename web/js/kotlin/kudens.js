@@ -43,7 +43,7 @@ var kudens = function (_, Kotlin) {
   };
   function SpriteBatch() {
   }
-  SpriteBatch.prototype.draw_xrfpo0$ = function (sprite, x, y, scale, rotation) {
+  SpriteBatch.prototype.draw_kjwdzj$ = function (sprite, x, y, scale, rotation) {
     if (scale === void 0)
       scale = 1.0;
     if (rotation === void 0)
@@ -227,7 +227,7 @@ var kudens = function (_, Kotlin) {
       throw new IllegalStateException("Couldn't create webgl texture!");
     }
   };
-  Textures.prototype.load_cgi7kw$ = function (mapTileSet) {
+  Textures.prototype.load_y153k1$ = function (mapTileSet) {
   };
   Textures.prototype.textureLoaded_0 = function (texture, image) {
     var gl = Game_getInstance().gl();
@@ -563,7 +563,7 @@ var kudens = function (_, Kotlin) {
         return DrawMode$LINEAR_getInstance();
       case 'NEAREST':
         return DrawMode$NEAREST_getInstance();
-      default:Kotlin.throwISE('No enum constant com.persesgames.game.DrawMode.' + name);
+      default:Kotlin.throwISE('No enum constant games.perses.game.DrawMode.' + name);
     }
   }
   DrawMode.valueOf_61zpoe$ = DrawMode$valueOf;
@@ -639,15 +639,15 @@ var kudens = function (_, Kotlin) {
       textCanvas.setAttribute('style', 'position: absolute; left: ' + left + 'px; top: ' + top + 'px; z-index: 10; width: ' + this.view.windowWidth + 'px; height: ' + this.view.windowHeight + 'px;');
     }
   };
-  Game.prototype.start_ocgj3q$ = function (startScreen) {
+  Game.prototype.start_lbnb05$ = function (startScreen) {
     if (this.started) {
       throw new IllegalStateException('You can only start a game once!');
     }
-    this.setScreen_ocgj3q$(startScreen);
+    this.setScreen_lbnb05$(startScreen);
     this.started = true;
     this.gameLoop();
   };
-  Game.prototype.setScreen_ocgj3q$ = function (screen) {
+  Game.prototype.setScreen_lbnb05$ = function (screen) {
     this.currentScreen.closeResources();
     this.currentScreen = screen;
     this.currentScreen.loadResources();
@@ -665,17 +665,17 @@ var kudens = function (_, Kotlin) {
   }
   Game.prototype.gameLoop = function () {
     if (!Textures_getInstance().ready()) {
-      Game_getInstance().gl().clearColor(1.0, 1.0, 1.0, 1.0);
-      Game_getInstance().gl().clear(WebGLRenderingContext.COLOR_BUFFER_BIT);
+      this.gl().clearColor(1.0, 1.0, 1.0, 1.0);
+      this.gl().clear(WebGLRenderingContext.COLOR_BUFFER_BIT);
     }
      else {
       this.resize();
       if (!this.pause) {
         this.html.canvas2d.clearRect(0.0, 0.0, this.view.width, this.view.height);
-        Game_getInstance().gl().clearColor(this.clearRed, this.clearGreen, this.clearBlue, this.clearAlpha);
-        Game_getInstance().gl().clear(WebGLRenderingContext.COLOR_BUFFER_BIT);
-        Game_getInstance().gl().enable(WebGLRenderingContext.BLEND);
-        Game_getInstance().gl().blendFunc(WebGLRenderingContext.SRC_ALPHA, WebGLRenderingContext.ONE_MINUS_SRC_ALPHA);
+        this.gl().clearColor(this.clearRed, this.clearGreen, this.clearBlue, this.clearAlpha);
+        this.gl().clear(WebGLRenderingContext.COLOR_BUFFER_BIT);
+        this.gl().enable(WebGLRenderingContext.BLEND);
+        this.gl().blendFunc(WebGLRenderingContext.SRC_ALPHA, WebGLRenderingContext.ONE_MINUS_SRC_ALPHA);
         var time = (new Date()).getTime();
         this.currentDelta = (time - this.currentTime) / 1000.0;
         this.currentTime = time;
@@ -785,7 +785,7 @@ var kudens = function (_, Kotlin) {
         return ViewType$HEIGHT_getInstance();
       case 'ABSOLUTE':
         return ViewType$ABSOLUTE_getInstance();
-      default:Kotlin.throwISE('No enum constant com.persesgames.game.ViewType.' + name);
+      default:Kotlin.throwISE('No enum constant games.perses.game.ViewType.' + name);
     }
   }
   ViewType.valueOf_61zpoe$ = ViewType$valueOf;
@@ -1119,7 +1119,7 @@ var kudens = function (_, Kotlin) {
         return KeyCode$MINUS_getInstance();
       case 'PLUS':
         return KeyCode$PLUS_getInstance();
-      default:Kotlin.throwISE('No enum constant com.persesgames.input.KeyCode.' + name);
+      default:Kotlin.throwISE('No enum constant games.perses.input.KeyCode.' + name);
     }
   }
   KeyCode.valueOf_61zpoe$ = KeyCode$valueOf;
@@ -1151,19 +1151,19 @@ var kudens = function (_, Kotlin) {
     this.inputProcesser_0 = new EmptyInputProcessor();
     var body = document.body;
     if (body != null) {
-      body.onkeydown = Keys_init$lambda;
-      body.onkeyup = Keys_init$lambda_0;
-      body.onkeypress = Keys_init$lambda_1;
-      body.onclick = Keys_init$lambda_2;
-      body.onmousedown = Keys_init$lambda_3;
-      body.onmouseup = Keys_init$lambda_4;
-      body.onmousemove = Keys_init$lambda_5;
+      body.onkeydown = Keys_init$lambda(this);
+      body.onkeyup = Keys_init$lambda_0(this);
+      body.onkeypress = Keys_init$lambda_1(this);
+      body.onclick = Keys_init$lambda_2(this);
+      body.onmousedown = Keys_init$lambda_3(this);
+      body.onmouseup = Keys_init$lambda_4(this);
+      body.onmousemove = Keys_init$lambda_5(this);
     }
      else {
       console.log("Can't register key events, document.body is null!?");
     }
   }
-  Keys.prototype.setInputProcessor_wjqqmu$ = function (processor) {
+  Keys.prototype.setInputProcessor_809zsn$ = function (processor) {
     this.inputProcesser_0 = processor;
   };
   Keys.prototype.keyDown_0 = function (key) {
@@ -1199,33 +1199,47 @@ var kudens = function (_, Kotlin) {
   Keys.prototype.isDown_za3lpa$ = function (keyCode) {
     return this.keys_0.containsKey_11rb$(keyCode);
   };
-  Keys.prototype.isDown_q25rai$ = function (keyCode) {
+  Keys.prototype.isDown_igopyj$ = function (keyCode) {
     return this.keys_0.containsKey_11rb$(keyCode.keyCode);
   };
   Keys.prototype.wasPressed_5wr77w$ = function (keyCode, delta) {
     var time = this.keys_0.get_11rb$(keyCode);
     return time != null && time > (new Date()).getTime() - delta;
   };
-  function Keys_init$lambda(it) {
-    Keys_getInstance().keyDown_0(it);
+  function Keys_init$lambda(this$Keys) {
+    return function (it) {
+      this$Keys.keyDown_0(it);
+    };
   }
-  function Keys_init$lambda_0(it) {
-    Keys_getInstance().keyUp_0(it);
+  function Keys_init$lambda_0(this$Keys) {
+    return function (it) {
+      this$Keys.keyUp_0(it);
+    };
   }
-  function Keys_init$lambda_1(it) {
-    Keys_getInstance().keyPress_0(it);
+  function Keys_init$lambda_1(this$Keys) {
+    return function (it) {
+      this$Keys.keyPress_0(it);
+    };
   }
-  function Keys_init$lambda_2(it) {
-    Keys_getInstance().mouseClick_0(it);
+  function Keys_init$lambda_2(this$Keys) {
+    return function (it) {
+      this$Keys.mouseClick_0(it);
+    };
   }
-  function Keys_init$lambda_3(it) {
-    Keys_getInstance().mouseMove_0(it);
+  function Keys_init$lambda_3(this$Keys) {
+    return function (it) {
+      this$Keys.mouseMove_0(it);
+    };
   }
-  function Keys_init$lambda_4(it) {
-    Keys_getInstance().mouseMove_0(it);
+  function Keys_init$lambda_4(this$Keys) {
+    return function (it) {
+      this$Keys.mouseMove_0(it);
+    };
   }
-  function Keys_init$lambda_5(it) {
-    Keys_getInstance().mouseMove_0(it);
+  function Keys_init$lambda_5(this$Keys) {
+    return function (it) {
+      this$Keys.mouseMove_0(it);
+    };
   }
   Keys.$metadata$ = {
     kind: Kotlin.Kind.OBJECT,
@@ -1474,7 +1488,7 @@ var kudens = function (_, Kotlin) {
     this.matrix_0[14] = 0.0;
     this.matrix_0[15] = 1.0;
   };
-  Matrix4.prototype.mul_jx4e45$ = function (other) {
+  Matrix4.prototype.mul_2qxizu$ = function (other) {
     this.mul_0(other.get());
   };
   Matrix4.prototype.mul_0 = function (other) {
@@ -1727,12 +1741,12 @@ var kudens = function (_, Kotlin) {
     req.send(null);
     return req.responseText;
   }
-  var package$com = _.com || (_.com = {});
-  var package$persesgames = package$com.persesgames || (package$com.persesgames = {});
-  var package$sprite = package$persesgames.sprite || (package$persesgames.sprite = {});
+  var package$games = _.games || (_.games = {});
+  var package$perses = package$games.perses || (package$games.perses = {});
+  var package$sprite = package$perses.sprite || (package$perses.sprite = {});
   package$sprite.Sprite = Sprite;
   package$sprite.SpriteBatch = SpriteBatch;
-  var package$texture = package$persesgames.texture || (package$persesgames.texture = {});
+  var package$texture = package$perses.texture || (package$perses.texture = {});
   package$texture.TextureData = TextureData;
   package$texture.Texture = Texture;
   package$texture.Rect = Rect;
@@ -1743,7 +1757,7 @@ var kudens = function (_, Kotlin) {
   Object.defineProperty(package$texture, 'Textures', {
     get: Textures_getInstance
   });
-  var package$map = package$persesgames.map || (package$persesgames.map = {});
+  var package$map = package$perses.map || (package$perses.map = {});
   package$map.Map = Map;
   var package$tiled = package$map.tiled || (package$map.tiled = {});
   package$tiled.MapData = MapData;
@@ -1758,7 +1772,7 @@ var kudens = function (_, Kotlin) {
   Object.defineProperty(DrawMode, 'NEAREST', {
     get: DrawMode$NEAREST_getInstance
   });
-  var package$game = package$persesgames.game || (package$persesgames.game = {});
+  var package$game = package$perses.game || (package$perses.game = {});
   package$game.DrawMode = DrawMode;
   package$game.HTMLElements = HTMLElements;
   Object.defineProperty(package$game, 'Game', {
@@ -1780,7 +1794,7 @@ var kudens = function (_, Kotlin) {
   });
   package$game.ViewType = ViewType;
   package$game.View = View;
-  var package$color = package$persesgames.color || (package$persesgames.color = {});
+  var package$color = package$perses.color || (package$perses.color = {});
   Object.defineProperty(package$color, 'Color', {
     get: Color_getInstance
   });
@@ -1805,20 +1819,20 @@ var kudens = function (_, Kotlin) {
   Object.defineProperty(KeyCode, 'PLUS', {
     get: KeyCode$PLUS_getInstance
   });
-  var package$input = package$persesgames.input || (package$persesgames.input = {});
+  var package$input = package$perses.input || (package$perses.input = {});
   package$input.KeyCode = KeyCode;
   package$input.InputProcessor = InputProcessor;
   package$input.EmptyInputProcessor = EmptyInputProcessor;
   Object.defineProperty(package$input, 'Keys', {
     get: Keys_getInstance
   });
-  var package$shader = package$persesgames.shader || (package$persesgames.shader = {});
+  var package$shader = package$perses.shader || (package$perses.shader = {});
   package$shader.ShaderProgram = ShaderProgram;
   package$shader.VertextAttributeInfo = VertextAttributeInfo;
   package$shader.ShaderProgramMesh = ShaderProgramMesh;
-  var package$math = package$persesgames.math || (package$persesgames.math = {});
+  var package$math = package$perses.math || (package$perses.math = {});
   package$math.Matrix4 = Matrix4;
-  var package$sound = package$persesgames.sound || (package$persesgames.sound = {});
+  var package$sound = package$perses.sound || (package$perses.sound = {});
   package$sound.Sound = Sound;
   Object.defineProperty(package$sound, 'Sounds', {
     get: Sounds_getInstance
@@ -1826,11 +1840,11 @@ var kudens = function (_, Kotlin) {
   Object.defineProperty(package$sound, 'Music', {
     get: Music_getInstance
   });
-  var package$text = package$persesgames.text || (package$persesgames.text = {});
+  var package$text = package$perses.text || (package$perses.text = {});
   Object.defineProperty(package$text, 'Texts', {
     get: Texts_getInstance
   });
-  var package$net = package$persesgames.net || (package$persesgames.net = {});
+  var package$net = package$perses.net || (package$perses.net = {});
   package$net.getUrlAsString_61zpoe$ = getUrlAsString;
   vertexShaderSource = '\n    attribute vec2 a_position;\n    attribute vec2 a_boundingBox;\n    attribute vec2 a_texCoord;\n    attribute float a_scale;\n    attribute float a_rotation;\n\n    uniform mat4 u_projectionView;\n\n    varying vec2 v_textCoord;\n\n    mat4 scale(float scale) {\n        return mat4(\n            vec4(scale, 0.0,   0.0,   0.0),\n            vec4(0.0,   scale, 0.0,   0.0),\n            vec4(0.0,   0.0,   scale, 0.0),\n            vec4(0.0,   0.0,   0.0,   1.0)\n        );\n    }\n\n    mat4 rotateZ(float angle) {\n        return mat4(\n            vec4(cos(angle),   sin(angle),  0.0,  0.0),\n            vec4(-sin(angle),  cos(angle),  0.0,  0.0),\n            vec4(0.0,          0.0,         1.0,  0.0),\n            vec4(0.0,          0.0,         0.0,  1.0)\n        );\n    }\n\n    void main(void) {\n        v_textCoord = a_texCoord;\n\n        vec4 scaledBox = vec4(a_boundingBox, 1.0, 1.0) * scale(a_scale) * rotateZ(a_rotation);\n\n        gl_Position = u_projectionView * vec4(a_position + scaledBox.xy, 1.0, 1.0);\n    }\n';
   fragmentShaderSource = '\n    precision mediump float;\n\n    uniform sampler2D u_sampler;\n\n    varying vec2 v_textCoord;\n\n    void main(void) {\n        gl_FragColor = texture2D(u_sampler, v_textCoord);\n    }\n';
