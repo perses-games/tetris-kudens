@@ -3,13 +3,15 @@ package games.perses.tetris
 import games.perses.color.Color
 import games.perses.game.Game
 import games.perses.game.Screen
-import games.perses.input.InputProcessor
 import games.perses.input.KeyCode
 import games.perses.input.Keys
+import games.perses.sound.Music
+import games.perses.sound.Sound
 import games.perses.sprite.Sprite
 import games.perses.sprite.SpriteBatch
 import games.perses.text.Texts
 import games.perses.texture.Textures
+import org.w3c.dom.HTMLAudioElement
 
 /**
  * User: rnentjes
@@ -17,7 +19,7 @@ import games.perses.texture.Textures
  * Time: 11:51
  */
 
-class GameScreen : Screen(), InputProcessor {
+class GameScreen : Screen() {
     var sprites = SpriteBatch()
     var playfield = Array(22, { Array(10, { " " } ) })
     var blocks = mapOf(
@@ -36,6 +38,14 @@ class GameScreen : Screen(), InputProcessor {
     var textColor = Color.hslToRgb(0.125f, SATURATION, NORMAL)
     var gameOver = false
 
+    var music: HTMLAudioElement? = null
+    var sndRotate: Sound? = null
+    var sndRotateFail: Sound? = null
+    var sndTick: Sound? = null
+    var sndSingle: Sound? = null
+    var sndDouble: Sound? = null
+    var sndTriple: Sound? = null
+
     var greyBlocks = arrayOf(
       Sprite(""), Sprite("GREY_1"), Sprite("GREY_2"), Sprite("GREY_3"), Sprite("GREY_4"),
       Sprite("GREY_5"), Sprite("GREY_6"), Sprite("GREY_7"), Sprite("GREY_8"), Sprite("GREY_9") )
@@ -45,8 +55,6 @@ class GameScreen : Screen(), InputProcessor {
     var piece = Piece()
 
     override fun loadResources() {
-        Keys.setInputProcessor(this)
-
         Textures.create("RED", 8, 8, Block.create(0f))
         Textures.create("GREEN", 8, 8, Block.create(0.33f))
         Textures.create("BLUE", 8, 8, Block.create(0.66f))
@@ -70,58 +78,40 @@ class GameScreen : Screen(), InputProcessor {
         Textures.create("Z", 8, 8, Block.create(0f))
 
         Game.setClearColor(1f, 1f, 1f, 1f)
+
+        sndRotate = Sound("ROTATE", "sounds/SFX_PieceRotateLR.ogg", 1.0, 1)
+        sndRotateFail = Sound("ROTATEFAIL", "sounds/SFX_PieceRotateFail.ogg", 1.0, 1)
+        sndTick = Sound("TICK", "sounds/SFX_PieceSoftDrop.ogg", 1.0, 1)
+        sndSingle = Sound("TICK", "sounds/SFX_SpecialLineClearSingle.ogg", 1.0, 1)
+        sndDouble = Sound("TICK", "sounds/SFX_SpecialLineClearDouble.ogg", 1.0, 1)
+        sndTriple = Sound("TICK", "sounds/SFX_SpecialLineClearTriple.ogg", 1.0, 1)
+
+        music = Music.play("music/Tetris.mp3", 0.1, looping = true)
     }
-
-    override fun keyDown(keyCode: Int) {
-    }
-
-    override fun keyPressed(charCode: Int) {
-        println("keypress: $charCode")
-        when(charCode) {
-            KeyCode.LEFT.keyCode -> {
-                if (piece.canMoveLeft(playfield)) {
-                    piece.moveLeft()
-                }
-            }
-            KeyCode.RIGHT.keyCode -> {
-                if (piece.canMoveLeft(playfield)) {
-                    piece.moveLeft()
-                }
-            }
-            KeyCode.UP.keyCode -> {
-                if (piece.canTurn(playfield)) {
-                    piece.turn()
-                }
-            }
-            KeyCode.DOWN.keyCode -> {
-                if (piece.canMoveDown(playfield)) {
-                    piece.moveDown()
-                }
-            }
-        }
-    }
-
-    override fun keyUp(keyCode: Int) {}
-
-    override fun pointerClick(pointer: Int, x: Float, y: Float) {}
 
     private fun checkInput(delta: Float) {
         if (Keys.wasPressed(KeyCode.LEFT.keyCode, (delta * 1000).toDouble())) {
             if (piece.canMoveLeft(playfield)) {
                 piece.moveLeft()
+                sndTick?.play()
             }
         } else if (Keys.wasPressed(KeyCode.RIGHT.keyCode, (delta * 1000).toDouble())) {
             if (piece.canMoveRight(playfield)) {
                 piece.moveRight()
+                sndTick?.play()
             }
         } else if (Keys.wasPressed(KeyCode.UP.keyCode, (delta * 1000).toDouble())) {
             if (piece.canTurn(playfield)) {
                 piece.turn()
+                sndRotate?.play()
+            } else {
+                sndRotateFail?.play()
             }
         } else if (Keys.wasPressed(KeyCode.DOWN.keyCode, (delta * 1000).toDouble())) {
             if (piece.canMoveDown(playfield)) {
                 piece.moveDown()
                 score.tick()
+                sndTick?.play()
             }
         }
     }
@@ -255,7 +245,6 @@ class GameScreen : Screen(), InputProcessor {
         var linesRemoved = 0
         while (!toRemove.isEmpty()) {
             val line = toRemove.removeAt(0) - linesRemoved
-            println("remove line $line")
 
             for (y in line..20) {
                 playfield[y] = playfield[y + 1]
@@ -263,9 +252,22 @@ class GameScreen : Screen(), InputProcessor {
 
             playfield[21] = Array(10, { " " })
             linesRemoved++
+            timePerTick *= 0.95f
         }
 
         score.linesRemoved(linesRemoved)
+        when(linesRemoved) {
+            0 -> {}
+            1 -> {
+                sndSingle?.play()
+            }
+            2 -> {
+                sndDouble?.play()
+            }
+            else -> {
+                sndTriple?.play()
+            }
+        }
     }
 
 }
