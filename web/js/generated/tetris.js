@@ -396,12 +396,12 @@ var tetris = function (_, Kotlin, $module$kudens) {
     texture_0.Textures.create_56dudh$('T', 8, 8, Block_getInstance().create_mx4ult$(0.75));
     texture_0.Textures.create_56dudh$('Z', 8, 8, Block_getInstance().create_mx4ult$(0.0));
     game_0.Game.setClearColor_7b5o5w$(1.0, 1.0, 1.0, 1.0);
-    this.sndRotate = new Sound('ROTATE', 'sounds/SFX_PieceRotateLR.ogg', 1.0, 1);
-    this.sndRotateFail = new Sound('ROTATEFAIL', 'sounds/SFX_PieceRotateFail.ogg', 1.0, 1);
-    this.sndTick = new Sound('TICK', 'sounds/SFX_PieceSoftDrop.ogg', 1.0, 1);
-    this.sndSingle = new Sound('TICK', 'sounds/SFX_SpecialLineClearSingle.ogg', 1.0, 1);
-    this.sndDouble = new Sound('TICK', 'sounds/SFX_SpecialLineClearDouble.ogg', 1.0, 1);
-    this.sndTriple = new Sound('TICK', 'sounds/SFX_SpecialLineClearTriple.ogg', 1.0, 1);
+    this.sndRotate = new Sound('ROTATE', 'sounds/SFX_PieceRotateLR.mp3', 1.0, 1);
+    this.sndRotateFail = new Sound('ROTATEFAIL', 'sounds/SFX_PieceRotateFail.mp3', 1.0, 1);
+    this.sndTick = new Sound('TICK', 'sounds/SFX_PieceSoftDrop.mp3', 1.0, 1);
+    this.sndSingle = new Sound('TICK', 'sounds/SFX_SpecialLineClearSingle.mp3', 1.0, 1);
+    this.sndDouble = new Sound('TICK', 'sounds/SFX_SpecialLineClearDouble.mp3', 1.0, 1);
+    this.sndTriple = new Sound('TICK', 'sounds/SFX_SpecialLineClearTriple.mp3', 1.0, 1);
     this.music = sound_0.Music.play_1truf$('music/Tetris.mp3', 0.1, true);
   };
   GameScreen.prototype.checkInput_0 = function (delta) {

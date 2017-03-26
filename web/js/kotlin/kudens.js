@@ -1238,8 +1238,12 @@ var kudens = function (_, Kotlin) {
     ((tmp$_2 = document.body) != null ? tmp$_2 : Kotlin.throwNPE()).appendChild(this.container);
     this.container.appendChild(webGlCanvas);
     this.container.appendChild(canvas);
-    var webglcanvas = webGlCanvas.getContext('webgl');
     var canvas2dcanvas = canvas.getContext('2d');
+    var webglcanvas = webGlCanvas.getContext('webgl');
+    if (webglcanvas == null) {
+      console.log('webgl context not found, trying experimental-webgl.');
+      webglcanvas = webGlCanvas.getContext('experimental-webgl');
+    }
     if (Kotlin.isType(webglcanvas, WebGLRenderingContext)) {
       this.webgl = webglcanvas;
     }
@@ -1637,15 +1641,18 @@ var kudens = function (_, Kotlin) {
     tmp$ = this.channels;
     for (tmp$_0 = 0; tmp$_0 !== tmp$.length; ++tmp$_0) {
       var audio = tmp$[tmp$_0];
-      audio.src = this.url;
-      audio.pause();
-      audio.load();
-      audio.volume = this.volume;
+      if (audio != null) {
+        audio.src = this.url;
+        audio.pause();
+        audio.load();
+        audio.volume = this.volume;
+      }
     }
   }
   Sound.prototype.play = function () {
-    this.channels[this.nextChannel].currentTime = 0.0;
-    this.channels[this.nextChannel].play();
+    var tmp$, tmp$_0;
+    (tmp$ = this.channels[this.nextChannel]) != null ? (tmp$.currentTime = 0.0) : null;
+    (tmp$_0 = this.channels[this.nextChannel]) != null ? tmp$_0.play() : null;
     this.nextChannel = (this.nextChannel + 1 | 0) % this.channels.length;
   };
   Sound.prototype.pause = function () {
@@ -1653,7 +1660,7 @@ var kudens = function (_, Kotlin) {
     tmp$ = this.channels;
     for (tmp$_0 = 0; tmp$_0 !== tmp$.length; ++tmp$_0) {
       var audio = tmp$[tmp$_0];
-      audio.pause();
+      audio != null ? audio.pause() : null;
     }
   };
   function Sound_init$lambda(it) {

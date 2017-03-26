@@ -79,12 +79,12 @@ class GameScreen : Screen() {
 
         Game.setClearColor(1f, 1f, 1f, 1f)
 
-        sndRotate = Sound("ROTATE", "sounds/SFX_PieceRotateLR.ogg", 1.0, 1)
-        sndRotateFail = Sound("ROTATEFAIL", "sounds/SFX_PieceRotateFail.ogg", 1.0, 1)
-        sndTick = Sound("TICK", "sounds/SFX_PieceSoftDrop.ogg", 1.0, 1)
-        sndSingle = Sound("TICK", "sounds/SFX_SpecialLineClearSingle.ogg", 1.0, 1)
-        sndDouble = Sound("TICK", "sounds/SFX_SpecialLineClearDouble.ogg", 1.0, 1)
-        sndTriple = Sound("TICK", "sounds/SFX_SpecialLineClearTriple.ogg", 1.0, 1)
+        sndRotate = Sound("ROTATE", "sounds/SFX_PieceRotateLR.mp3", 1.0, 1)
+        sndRotateFail = Sound("ROTATEFAIL", "sounds/SFX_PieceRotateFail.mp3", 1.0, 1)
+        sndTick = Sound("TICK", "sounds/SFX_PieceSoftDrop.mp3", 1.0, 1)
+        sndSingle = Sound("TICK", "sounds/SFX_SpecialLineClearSingle.mp3", 1.0, 1)
+        sndDouble = Sound("TICK", "sounds/SFX_SpecialLineClearDouble.mp3", 1.0, 1)
+        sndTriple = Sound("TICK", "sounds/SFX_SpecialLineClearTriple.mp3", 1.0, 1)
 
         music = Music.play("music/Tetris.mp3", 0.1, looping = true)
     }
