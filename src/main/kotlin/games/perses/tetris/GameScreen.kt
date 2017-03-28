@@ -3,6 +3,7 @@ package games.perses.tetris
 import games.perses.color.Color
 import games.perses.game.Game
 import games.perses.game.Screen
+import games.perses.input.EmptyInputProcessor
 import games.perses.input.KeyCode
 import games.perses.input.Keys
 import games.perses.sound.Music
@@ -49,7 +50,6 @@ class GameScreen : Screen() {
     var greyBlocks = arrayOf(
       Sprite(""), Sprite("GREY_1"), Sprite("GREY_2"), Sprite("GREY_3"), Sprite("GREY_4"),
       Sprite("GREY_5"), Sprite("GREY_6"), Sprite("GREY_7"), Sprite("GREY_8"), Sprite("GREY_9") )
-    private val keys: MutableMap<Int, Int> = HashMap()
     var deltaY = 0
 
     var piece = Piece()
@@ -87,6 +87,39 @@ class GameScreen : Screen() {
         sndTriple = Sound("TICK", "sounds/SFX_SpecialLineClearTriple.mp3", 1.0, 1)
 
         music = Music.play("music/Tetris.mp3", 0.1, looping = true)
+
+        Keys.setInputProcessor(object : EmptyInputProcessor() {
+            override fun pointerClick(pointer: Int, x: Float, y: Float) {
+                handleClick(pointer, x, y)
+            }
+        })
+    }
+
+    private fun  handleClick(pointer: Int, x: Float, y: Float) {
+        if (y  < 400) {
+            if (piece.canMoveDown(playfield)) {
+                piece.moveDown()
+                score.tick()
+                sndTick?.play()
+            }
+        } else if (y > 1200) {
+            if (piece.canTurn(playfield)) {
+                piece.turn()
+                sndRotate?.play()
+            } else {
+                sndRotateFail?.play()
+            }
+        } else if (x < 400) {
+            if (piece.canMoveLeft(playfield)) {
+                piece.moveLeft()
+                sndTick?.play()
+            }
+        } else {
+            if (piece.canMoveRight(playfield)) {
+                piece.moveRight()
+                sndTick?.play()
+            }
+        }
     }
 
     private fun checkInput(delta: Float) {

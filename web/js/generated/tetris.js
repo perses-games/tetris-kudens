@@ -19,14 +19,16 @@ var tetris = function (_, Kotlin, $module$kudens) {
   var Sound = $module$kudens.games.perses.sound.Sound;
   var sound_0 = $module$kudens.games.perses.sound;
   var input_0 = $module$kudens.games.perses.input;
+  var EmptyInputProcessor = $module$kudens.games.perses.input.EmptyInputProcessor;
   var KeyCode = $module$kudens.games.perses.input.KeyCode;
   var ArrayList_init = Kotlin.kotlin.collections.ArrayList_init_ww73n8$;
   var mapOf = Kotlin.kotlin.collections.mapOf_qfcya0$;
-  var HashMap_init = Kotlin.kotlin.collections.HashMap_init_q3lmfv$;
   PieceType.prototype = Object.create(Enum.prototype);
   PieceType.prototype.constructor = PieceType;
   WelcomeScreen.prototype = Object.create(Screen.prototype);
   WelcomeScreen.prototype.constructor = WelcomeScreen;
+  GameScreen$loadResources$ObjectLiteral.prototype = Object.create(EmptyInputProcessor.prototype);
+  GameScreen$loadResources$ObjectLiteral.prototype.constructor = GameScreen$loadResources$ObjectLiteral;
   GameScreen.prototype = Object.create(Screen.prototype);
   GameScreen.prototype.constructor = GameScreen;
   var LIGHT;
@@ -371,10 +373,20 @@ var tetris = function (_, Kotlin, $module$kudens) {
     this.sndDouble = null;
     this.sndTriple = null;
     this.greyBlocks = [new Sprite(''), new Sprite('GREY_1'), new Sprite('GREY_2'), new Sprite('GREY_3'), new Sprite('GREY_4'), new Sprite('GREY_5'), new Sprite('GREY_6'), new Sprite('GREY_7'), new Sprite('GREY_8'), new Sprite('GREY_9')];
-    this.keys_0 = HashMap_init();
     this.deltaY = 0;
     this.piece = new Piece();
   }
+  function GameScreen$loadResources$ObjectLiteral(this$GameScreen) {
+    this.this$GameScreen = this$GameScreen;
+    EmptyInputProcessor.call(this);
+  }
+  GameScreen$loadResources$ObjectLiteral.prototype.pointerClick_nhq4am$ = function (pointer, x, y) {
+    this.this$GameScreen.handleClick_0(pointer, x, y);
+  };
+  GameScreen$loadResources$ObjectLiteral.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    interfaces: [EmptyInputProcessor]
+  };
   GameScreen.prototype.loadResources = function () {
     texture_0.Textures.create_56dudh$('RED', 8, 8, Block_getInstance().create_mx4ult$(0.0));
     texture_0.Textures.create_56dudh$('GREEN', 8, 8, Block_getInstance().create_mx4ult$(0.33));
@@ -403,6 +415,38 @@ var tetris = function (_, Kotlin, $module$kudens) {
     this.sndDouble = new Sound('TICK', 'sounds/SFX_SpecialLineClearDouble.mp3', 1.0, 1);
     this.sndTriple = new Sound('TICK', 'sounds/SFX_SpecialLineClearTriple.mp3', 1.0, 1);
     this.music = sound_0.Music.play_1truf$('music/Tetris.mp3', 0.1, true);
+    input_0.Keys.setInputProcessor_809zsn$(new GameScreen$loadResources$ObjectLiteral(this));
+  };
+  GameScreen.prototype.handleClick_0 = function (pointer, x, y) {
+    var tmp$, tmp$_0, tmp$_1, tmp$_2, tmp$_3;
+    if (y < 400) {
+      if (this.piece.canMoveDown_bwh3i6$(this.playfield)) {
+        this.piece.moveDown();
+        this.score.tick();
+        (tmp$ = this.sndTick) != null ? tmp$.play() : null;
+      }
+    }
+     else if (y > 1200) {
+      if (this.piece.canTurn_bwh3i6$(this.playfield)) {
+        this.piece.turn();
+        (tmp$_0 = this.sndRotate) != null ? tmp$_0.play() : null;
+      }
+       else {
+        (tmp$_1 = this.sndRotateFail) != null ? tmp$_1.play() : null;
+      }
+    }
+     else if (x < 400) {
+      if (this.piece.canMoveLeft_bwh3i6$(this.playfield)) {
+        this.piece.moveLeft();
+        (tmp$_2 = this.sndTick) != null ? tmp$_2.play() : null;
+      }
+    }
+     else {
+      if (this.piece.canMoveRight_bwh3i6$(this.playfield)) {
+        this.piece.moveRight();
+        (tmp$_3 = this.sndTick) != null ? tmp$_3.play() : null;
+      }
+    }
   };
   GameScreen.prototype.checkInput_0 = function (delta) {
     var tmp$, tmp$_0, tmp$_1, tmp$_2, tmp$_3;

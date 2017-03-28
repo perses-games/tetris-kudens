@@ -14,7 +14,6 @@ class Piece {
     var y = 21
 
     fun moveLeft() {
-        // todo: check boundaries
         x--
     }
 

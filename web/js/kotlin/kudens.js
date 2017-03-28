@@ -1078,10 +1078,8 @@ var kudens = function (_, Kotlin) {
     var result = screenX;
     tmp$ = this.viewType;
     if (!Kotlin.equals(tmp$, ViewType$ABSOLUTE_getInstance()))
-      if (Kotlin.equals(tmp$, ViewType$WIDTH_getInstance()))
-        result = screenX / this.windowWidth * this.width - this.width / 2;
-      else if (Kotlin.equals(tmp$, ViewType$HEIGHT_getInstance()))
-        result = screenX / this.windowWidth * this.width - this.width / 2;
+      if (Kotlin.equals(tmp$, ViewType$WIDTH_getInstance()) || Kotlin.equals(tmp$, ViewType$HEIGHT_getInstance()))
+        result = (screenX - Game_getInstance().borderLeft) * this.width / this.windowWidth;
       else if (!Kotlin.equals(tmp$, ViewType$PROJECTION_getInstance())) {
         throw new IllegalStateException('ViewType ' + this.viewType + ' not implemented!');
       }
@@ -1092,10 +1090,8 @@ var kudens = function (_, Kotlin) {
     var result = screenY;
     tmp$ = this.viewType;
     if (!Kotlin.equals(tmp$, ViewType$ABSOLUTE_getInstance()))
-      if (Kotlin.equals(tmp$, ViewType$WIDTH_getInstance()))
-        result = -(screenY / this.windowHeight * this.height - this.height / 2);
-      else if (Kotlin.equals(tmp$, ViewType$HEIGHT_getInstance()))
-        result = -(screenY / this.windowHeight * this.height - this.height / 2);
+      if (Kotlin.equals(tmp$, ViewType$WIDTH_getInstance()) || Kotlin.equals(tmp$, ViewType$HEIGHT_getInstance()))
+        result = this.height - (screenY - Game_getInstance().borderTop) * this.height / this.windowHeight;
       else if (!Kotlin.equals(tmp$, ViewType$PROJECTION_getInstance())) {
         throw new IllegalStateException('ViewType ' + this.viewType + ' not implemented!');
       }
@@ -1107,10 +1103,8 @@ var kudens = function (_, Kotlin) {
     var normalizedX = gameX + this.width / 2;
     tmp$ = this.viewType;
     if (!Kotlin.equals(tmp$, ViewType$ABSOLUTE_getInstance()))
-      if (Kotlin.equals(tmp$, ViewType$WIDTH_getInstance()))
-        result = this.windowWidth / this.width * normalizedX;
-      else if (Kotlin.equals(tmp$, ViewType$HEIGHT_getInstance()))
-        result = this.windowWidth / this.width * normalizedX;
+      if (Kotlin.equals(tmp$, ViewType$WIDTH_getInstance()) || Kotlin.equals(tmp$, ViewType$HEIGHT_getInstance()))
+        result = gameX / this.width * this.windowWidth + Game_getInstance().borderLeft;
       else if (!Kotlin.equals(tmp$, ViewType$PROJECTION_getInstance())) {
         throw new IllegalStateException('ViewType ' + this.viewType + ' not implemented!');
       }
@@ -1122,10 +1116,8 @@ var kudens = function (_, Kotlin) {
     var normalizedY = gameY + this.height / 2;
     tmp$ = this.viewType;
     if (!Kotlin.equals(tmp$, ViewType$ABSOLUTE_getInstance()))
-      if (Kotlin.equals(tmp$, ViewType$WIDTH_getInstance()))
-        result = this.windowHeight - this.windowHeight / this.height * normalizedY;
-      else if (Kotlin.equals(tmp$, ViewType$HEIGHT_getInstance()))
-        result = this.windowHeight - this.windowHeight / this.height * normalizedY;
+      if (Kotlin.equals(tmp$, ViewType$WIDTH_getInstance()) || Kotlin.equals(tmp$, ViewType$HEIGHT_getInstance()))
+        result = this.height - gameY / this.height * this.windowHeight + Game_getInstance().borderTop;
       else if (!Kotlin.equals(tmp$, ViewType$PROJECTION_getInstance())) {
         throw new IllegalStateException('ViewType ' + this.viewType + ' not implemented!');
       }
@@ -1164,6 +1156,9 @@ var kudens = function (_, Kotlin) {
   Screen.prototype.loadResources = function () {
   };
   Screen.prototype.closeResources = function () {
+    this.unloadResources();
+  };
+  Screen.prototype.unloadResources = function () {
   };
   Screen.$metadata$ = {
     kind: Kotlin.Kind.CLASS,
@@ -1283,6 +1278,8 @@ var kudens = function (_, Kotlin) {
     this.fps = 0;
     this.fpsCount = 0;
     this.fpsCountTime = 0.0;
+    this.borderLeft = 0;
+    this.borderTop = 0;
   }
   Object.defineProperty(Game.prototype, 'html', {
     get: function () {
@@ -1310,10 +1307,10 @@ var kudens = function (_, Kotlin) {
       textCanvas.width = this.view.width | 0;
       textCanvas.height = this.view.height | 0;
       this.gl().viewport(0, 0, this.view.width | 0, this.view.height | 0);
-      var left = (windowWidth - this.view.windowWidth | 0) / 2 | 0;
-      var top = (windowHeight - this.view.windowHeight | 0) / 2 | 0;
-      canvas.setAttribute('style', 'position: absolute; left: ' + left + 'px; top: ' + top + 'px; z-index: 5; width: ' + this.view.windowWidth + 'px; height: ' + this.view.windowHeight + 'px;');
-      textCanvas.setAttribute('style', 'position: absolute; left: ' + left + 'px; top: ' + top + 'px; z-index: 10; width: ' + this.view.windowWidth + 'px; height: ' + this.view.windowHeight + 'px;');
+      this.borderLeft = (windowWidth - this.view.windowWidth | 0) / 2 | 0;
+      this.borderTop = (windowHeight - this.view.windowHeight | 0) / 2 | 0;
+      canvas.setAttribute('style', 'position: absolute; left: ' + this.borderLeft + 'px; top: ' + this.borderTop + 'px; z-index: 5; width: ' + this.view.windowWidth + 'px; height: ' + this.view.windowHeight + 'px;');
+      textCanvas.setAttribute('style', 'position: absolute; left: ' + this.borderLeft + 'px; top: ' + this.borderTop + 'px; z-index: 10; width: ' + this.view.windowWidth + 'px; height: ' + this.view.windowHeight + 'px;');
     }
   };
   Game.prototype.start_lbnb05$ = function (startScreen) {
@@ -1325,7 +1322,7 @@ var kudens = function (_, Kotlin) {
     this.gameLoop();
   };
   Game.prototype.setScreen_lbnb05$ = function (screen) {
-    this.currentScreen.closeResources();
+    this.currentScreen.unloadResources();
     this.currentScreen = screen;
     this.currentScreen.loadResources();
   };
