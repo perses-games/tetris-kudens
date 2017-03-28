@@ -103,7 +103,6 @@ class GameScreen : Screen() {
     }
 
     private fun  handleClick(pointer: Int, x: Float, y: Float) {
-        println("click $x,$y")
         if (x > 720 && y > 1520) {
             Game.view.switchFullscreen()
         }

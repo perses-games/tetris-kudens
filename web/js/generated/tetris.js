@@ -20,7 +20,6 @@ var tetris = function (_, Kotlin, $module$kudens) {
   var sound_0 = $module$kudens.games.perses.sound;
   var input_0 = $module$kudens.games.perses.input;
   var EmptyInputProcessor = $module$kudens.games.perses.input.EmptyInputProcessor;
-  var println = Kotlin.kotlin.io.println_s8jyv4$;
   var KeyCode = $module$kudens.games.perses.input.KeyCode;
   var ArrayList_init = Kotlin.kotlin.collections.ArrayList_init_ww73n8$;
   var mapOf = Kotlin.kotlin.collections.mapOf_qfcya0$;
@@ -424,7 +423,6 @@ var tetris = function (_, Kotlin, $module$kudens) {
   };
   GameScreen.prototype.handleClick_0 = function (pointer, x, y) {
     var tmp$, tmp$_0, tmp$_1, tmp$_2, tmp$_3;
-    println('click ' + x + ',' + y);
     if (x > 720 && y > 1520) {
       game_0.Game.view.switchFullscreen();
     }
