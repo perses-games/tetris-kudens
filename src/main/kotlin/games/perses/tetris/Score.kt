@@ -24,7 +24,7 @@ class Score(var score: Int = 0) {
     fun formatted(): String {
         var result = score.toString()
 
-        while(result.length < 8) {
+        while(result.length < 5) {
             result = "0"+result
         }
 

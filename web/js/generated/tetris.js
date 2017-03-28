@@ -304,7 +304,7 @@ var tetris = function (_, Kotlin, $module$kudens) {
   };
   Score.prototype.formatted = function () {
     var result = this.score.toString();
-    while (result.length < 8) {
+    while (result.length < 5) {
       result = '0' + result;
     }
     return result;
@@ -365,7 +365,7 @@ var tetris = function (_, Kotlin, $module$kudens) {
     this.timeTillNextTick = this.timePerTick;
     this.score = new Score();
     this.shadowColor = color_0.Color.hslToRgb_y2kzbl$(0.125, SATURATION, SHADOW);
-    this.textColor = color_0.Color.hslToRgb_y2kzbl$(0.125, SATURATION, NORMAL);
+    this.textColor = color_0.Color.hslToRgb_y2kzbl$(0.125, SATURATION, LIGHT);
     this.gameOver = false;
     this.music = null;
     this.sndRotate = null;
@@ -585,7 +585,7 @@ var tetris = function (_, Kotlin, $module$kudens) {
     this.sprites.render();
     var fs = this.score.formatted();
     text_0.Texts.drawText_k35s1u$(10.0, 58.0, fs, 'bold 48pt Arial', 'rgba(' + this.shadowColor[0] + ', ' + this.shadowColor[1] + ', ' + this.shadowColor[2] + ', 1)');
-    text_0.Texts.drawText_k35s1u$(7.0, 55.0, fs, 'bold 48pt Arial', 'rgba(' + this.textColor[0] + ', ' + this.textColor[0] + ', ' + this.textColor[0] + ', 0.9)');
+    text_0.Texts.drawText_k35s1u$(7.0, 55.0, fs, 'bold 48pt Arial', 'rgba(' + this.textColor[0] + ', ' + this.textColor[1] + ', ' + this.textColor[2] + ', 0.9)');
     if (this.gameOver) {
       text_0.Texts.drawText_k35s1u$(53.0, 803.0, 'GAME OVER!', 'bold 80pt Arial', 'rgba(55,0,0,1)');
       text_0.Texts.drawText_k35s1u$(50.0, 800.0, 'GAME OVER!', 'bold 80pt Arial', 'rgba(255,0,0,0.9)');

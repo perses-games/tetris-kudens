@@ -40,7 +40,7 @@ class GameScreen : Screen() {
     var timeTillNextTick = timePerTick
     var score = Score()
     var shadowColor = Color.hslToRgb(0.125f, SATURATION, SHADOW)
-    var textColor = Color.hslToRgb(0.125f, SATURATION, NORMAL)
+    var textColor = Color.hslToRgb(0.125f, SATURATION, LIGHT)
     var gameOver = false
 
     var music: HTMLAudioElement? = null
@@ -267,7 +267,7 @@ class GameScreen : Screen() {
 
         val fs = score.formatted()
         Texts.drawText(10f, 58f, fs, font = "bold 48pt Arial", fillStyle = "rgba(${shadowColor[0]}, ${shadowColor[1]}, ${shadowColor[2]}, 1)")
-        Texts.drawText(7f, 55f, fs, font = "bold 48pt Arial", fillStyle = "rgba(${textColor[0]}, ${textColor[0]}, ${textColor[0]}, 0.9)")
+        Texts.drawText(7f, 55f, fs, font = "bold 48pt Arial", fillStyle = "rgba(${textColor[0]}, ${textColor[1]}, ${textColor[2]}, 0.9)")
 
         if (gameOver) {
             Texts.drawText(53f, 803f, "GAME OVER!", font = "bold 80pt Arial", fillStyle = "rgba(55,0,0,1)")
