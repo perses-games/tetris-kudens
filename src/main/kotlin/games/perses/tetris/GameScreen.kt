@@ -3,6 +3,7 @@ package games.perses.tetris
 import games.perses.color.Color
 import games.perses.game.Game
 import games.perses.game.Screen
+import games.perses.game.View
 import games.perses.input.EmptyInputProcessor
 import games.perses.input.KeyCode
 import games.perses.input.Keys
@@ -32,6 +33,9 @@ class GameScreen : Screen() {
       "T" to Sprite("T"),
       "Z" to Sprite("Z")
     )
+    var fullscreen = Sprite("fullscreen")
+    var windowed = Sprite("windowed")
+
     var timePerTick = 1f
     var timeTillNextTick = timePerTick
     var score = Score()
@@ -55,6 +59,9 @@ class GameScreen : Screen() {
     var piece = Piece()
 
     override fun loadResources() {
+        Textures.load("fullscreen", "img/fullscreen.png")
+        Textures.load("windowed", "img/windowed.png")
+
         Textures.create("RED", 8, 8, Block.create(0f))
         Textures.create("GREEN", 8, 8, Block.create(0.33f))
         Textures.create("BLUE", 8, 8, Block.create(0.66f))
@@ -96,6 +103,10 @@ class GameScreen : Screen() {
     }
 
     private fun  handleClick(pointer: Int, x: Float, y: Float) {
+        println("click $x,$y")
+        if (x > 720 && y > 1520) {
+            Game.view.switchFullscreen()
+        }
         if (y  < 400) {
             if (piece.canMoveDown(playfield)) {
                 piece.moveDown()
@@ -245,6 +256,12 @@ class GameScreen : Screen() {
             for (position in piece.type.getPositions(piece.orientation)) {
                 sprites.draw(block, px + position.first * 80f, py + position.second * 80f, scale = 10f)
             }
+        }
+
+        if (Game.view.isFullscreen()) {
+            sprites.draw(windowed, 760f, 1560f, 0.25f)
+        } else {
+            sprites.draw(fullscreen, 760f, 1560f, 0.25f)
         }
 
         sprites.render()

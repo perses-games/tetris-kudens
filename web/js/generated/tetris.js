@@ -20,6 +20,7 @@ var tetris = function (_, Kotlin, $module$kudens) {
   var sound_0 = $module$kudens.games.perses.sound;
   var input_0 = $module$kudens.games.perses.input;
   var EmptyInputProcessor = $module$kudens.games.perses.input.EmptyInputProcessor;
+  var println = Kotlin.kotlin.io.println_s8jyv4$;
   var KeyCode = $module$kudens.games.perses.input.KeyCode;
   var ArrayList_init = Kotlin.kotlin.collections.ArrayList_init_ww73n8$;
   var mapOf = Kotlin.kotlin.collections.mapOf_qfcya0$;
@@ -359,6 +360,8 @@ var tetris = function (_, Kotlin, $module$kudens) {
     this.sprites = new SpriteBatch();
     this.playfield = Kotlin.newArrayF(22, GameScreen$playfield$lambda);
     this.blocks = mapOf([to('I', new Sprite('I')), to('J', new Sprite('J')), to('L', new Sprite('L')), to('O', new Sprite('O')), to('S', new Sprite('S')), to('T', new Sprite('T')), to('Z', new Sprite('Z'))]);
+    this.fullscreen = new Sprite('fullscreen');
+    this.windowed = new Sprite('windowed');
     this.timePerTick = 1.0;
     this.timeTillNextTick = this.timePerTick;
     this.score = new Score();
@@ -388,6 +391,8 @@ var tetris = function (_, Kotlin, $module$kudens) {
     interfaces: [EmptyInputProcessor]
   };
   GameScreen.prototype.loadResources = function () {
+    texture_0.Textures.load_puj7f4$('fullscreen', 'img/fullscreen.png');
+    texture_0.Textures.load_puj7f4$('windowed', 'img/windowed.png');
     texture_0.Textures.create_56dudh$('RED', 8, 8, Block_getInstance().create_mx4ult$(0.0));
     texture_0.Textures.create_56dudh$('GREEN', 8, 8, Block_getInstance().create_mx4ult$(0.33));
     texture_0.Textures.create_56dudh$('BLUE', 8, 8, Block_getInstance().create_mx4ult$(0.66));
@@ -419,6 +424,10 @@ var tetris = function (_, Kotlin, $module$kudens) {
   };
   GameScreen.prototype.handleClick_0 = function (pointer, x, y) {
     var tmp$, tmp$_0, tmp$_1, tmp$_2, tmp$_3;
+    println('click ' + x + ',' + y);
+    if (x > 720 && y > 1520) {
+      game_0.Game.view.switchFullscreen();
+    }
     if (y < 400) {
       if (this.piece.canMoveDown_bwh3i6$(this.playfield)) {
         this.piece.moveDown();
@@ -568,6 +577,12 @@ var tetris = function (_, Kotlin, $module$kudens) {
         var position = tmp$_2[tmp$_3];
         this.sprites.draw_kjwdzj$(block_0, px + position.first * 80.0, py + position.second * 80.0, 10.0);
       }
+    }
+    if (game_0.Game.view.isFullscreen()) {
+      this.sprites.draw_kjwdzj$(this.windowed, 760.0, 1560.0, 0.25);
+    }
+     else {
+      this.sprites.draw_kjwdzj$(this.fullscreen, 760.0, 1560.0, 0.25);
     }
     this.sprites.render();
     var fs = this.score.formatted();

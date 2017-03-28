@@ -11,6 +11,7 @@ var kudens = function (_, Kotlin) {
   var get_indices = Kotlin.kotlin.collections.get_indices_m7z4lg$;
   var endsWith = Kotlin.kotlin.text.endsWith_7epoxm$;
   var toTypedArray = Kotlin.kotlin.collections.toTypedArray_rjqryz$;
+  var println = Kotlin.kotlin.io.println_s8jyv4$;
   var HashSet_init = Kotlin.kotlin.collections.HashSet_init_287e2$;
   KeyCode.prototype = Object.create(Enum.prototype);
   KeyCode.prototype.constructor = KeyCode;
@@ -1038,12 +1039,44 @@ var kudens = function (_, Kotlin) {
     this.updateView();
   }
   View.prototype.requestFullscreen = function () {
-    if (document.webkitFullscreenElement) {
-      document.webkitCancelFullScreen();
+    println('Requesting fullscreen');
+    var element = document.body;
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    }
+     else if (element.mozRequestFullScreen) {
+      element.mozRequestFullScreen();
+    }
+     else if (element.webkitRequestFullscreen) {
+      element.webkitRequestFullscreen();
+    }
+     else if (element.msRequestFullscreen) {
+      element.msRequestFullscreen();
+    }
+  };
+  View.prototype.exitFullscreen = function () {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    }
+     else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    }
+     else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    }
+  };
+  View.prototype.switchFullscreen = function () {
+    if (this.isFullscreen()) {
+      this.exitFullscreen();
     }
      else {
-      document.documentElement.webkitRequestFullScreen();
+      this.requestFullscreen();
     }
+  };
+  View.prototype.isFullscreen = function () {
+    var fse = document.fullscreenElement || (document.mozFullScreenElement || (document.webkitFullscreenElement || document.msFullscreenElement));
+    console.log('fse: ', fse);
+    return fse != undefined;
   };
   View.prototype.updateView = function () {
     var tmp$;
