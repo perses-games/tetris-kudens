@@ -26,7 +26,21 @@
               </K2JSCompilerArguments>
             </option>
             <option name="k2jvmCompilerArguments">
-              <K2JVMCompilerArguments />
+              <K2JVMCompilerArguments>
+                <option name="noStdlib" value="true" />
+                <option name="languageVersion" value="1.1" />
+                <option name="apiVersion" value="1.1" />
+                <option name="suppressWarnings" value="true" />
+                <option name="coroutinesWarn" value="true" />
+                <option name="freeArgs">
+                  <list>
+                    <option value="$MODULE_DIR$/../../web/js/generated/tetris.js" />
+                    <option value="v5" />
+                    <option value="plain" />
+                    <option value="call" />
+                  </list>
+                </option>
+              </K2JVMCompilerArguments>
             </option>
             <option name="_commonCompilerArguments">
               <DummyImpl>
@@ -65,7 +79,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Gradle: perses.games:kudens:1.1.1" level="project" />
+    <orderEntry type="library" name="Gradle: perses.games:kudens:1.1.2-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-js:1.1.1" level="project" />
   </component>
 </module>

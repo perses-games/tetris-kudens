@@ -3,17 +3,16 @@ package games.perses.tetris
 import games.perses.color.Color
 import games.perses.game.Game
 import games.perses.game.Screen
-import games.perses.game.View
 import games.perses.input.EmptyInputProcessor
 import games.perses.input.KeyCode
 import games.perses.input.Keys
 import games.perses.sound.Music
-import games.perses.sound.Sound
 import games.perses.sprite.Sprite
 import games.perses.sprite.SpriteBatch
 import games.perses.text.Texts
 import games.perses.texture.Textures
 import org.w3c.dom.HTMLAudioElement
+import kotlin.browser.document
 
 /**
  * User: rnentjes
@@ -44,12 +43,6 @@ class GameScreen : Screen() {
     var gameOver = false
 
     var music: HTMLAudioElement? = null
-    var sndRotate: Sound? = null
-    var sndRotateFail: Sound? = null
-    var sndTick: Sound? = null
-    var sndSingle: Sound? = null
-    var sndDouble: Sound? = null
-    var sndTriple: Sound? = null
 
     var greyBlocks = arrayOf(
       Sprite(""), Sprite("GREY_1"), Sprite("GREY_2"), Sprite("GREY_3"), Sprite("GREY_4"),
@@ -61,10 +54,6 @@ class GameScreen : Screen() {
     override fun loadResources() {
         Textures.load("fullscreen", "img/fullscreen.png")
         Textures.load("windowed", "img/windowed.png")
-
-        Textures.create("RED", 8, 8, Block.create(0f))
-        Textures.create("GREEN", 8, 8, Block.create(0.33f))
-        Textures.create("BLUE", 8, 8, Block.create(0.66f))
 
         Textures.create("GREY_9", 8, 8, Block.createGrey(0.9f))
         Textures.create("GREY_8", 8, 8, Block.createGrey(0.8f))
@@ -86,80 +75,83 @@ class GameScreen : Screen() {
 
         Game.setClearColor(1f, 1f, 1f, 1f)
 
-        sndRotate = Sound("ROTATE", "sounds/SFX_PieceRotateLR.mp3", 1.0, 1)
-        sndRotateFail = Sound("ROTATEFAIL", "sounds/SFX_PieceRotateFail.mp3", 1.0, 1)
-        sndTick = Sound("TICK", "sounds/SFX_PieceSoftDrop.mp3", 1.0, 1)
-        sndSingle = Sound("TICK", "sounds/SFX_SpecialLineClearSingle.mp3", 1.0, 1)
-        sndDouble = Sound("TICK", "sounds/SFX_SpecialLineClearDouble.mp3", 1.0, 1)
-        sndTriple = Sound("TICK", "sounds/SFX_SpecialLineClearTriple.mp3", 1.0, 1)
+        GameSounds.loadAll()
 
         music = Music.play("music/Tetris.mp3", 0.1, looping = true)
 
         Keys.setInputProcessor(object : EmptyInputProcessor() {
             override fun pointerClick(pointer: Int, x: Float, y: Float) {
+                println("click: $x, $y")
                 handleClick(pointer, x, y)
             }
         })
     }
 
-    private fun  handleClick(pointer: Int, x: Float, y: Float) {
-        if (x > 720 && y > 1520) {
-            Game.view.switchFullscreen()
+    override fun unloadResources() {
+        Textures.clear()
+    }
+
+    private fun moveDown() {
+        if (piece.canMoveDown(playfield)) {
+            piece.moveDown()
+            score.tick()
+            GameSounds.TICK.play()
         }
-        if (y  < 400) {
-            if (piece.canMoveDown(playfield)) {
-                piece.moveDown()
-                score.tick()
-                sndTick?.play()
-            }
-        } else if (y > 1200) {
-            if (piece.canTurn(playfield)) {
-                piece.turn()
-                sndRotate?.play()
-            } else {
-                sndRotateFail?.play()
-            }
-        } else if (x < 400) {
-            if (piece.canMoveLeft(playfield)) {
-                piece.moveLeft()
-                sndTick?.play()
-            }
+    }
+
+    private fun turn() {
+        if (piece.canTurn(playfield)) {
+            piece.turn()
+            GameSounds.ROTATE.play()
         } else {
-            if (piece.canMoveRight(playfield)) {
-                piece.moveRight()
-                sndTick?.play()
+            GameSounds.ROTATE_FAIL.play()
+        }
+    }
+
+    private fun moveLeft() {
+        if (piece.canMoveLeft(playfield)) {
+            piece.moveLeft()
+            GameSounds.TICK.play()
+        }
+    }
+
+    private fun moveRight() {
+        if (piece.canMoveRight(playfield)) {
+            piece.moveRight()
+            GameSounds.TICK.play()
+        }
+    }
+
+    private fun  handleClick(pointer: Int, x: Float, y: Float) {
+        if (x > 720 && x < 800 && y > 1520 && y < 1600) {
+            Game.view.switchFullscreen()
+        } else {
+            if (y < 400) {
+                moveDown()
+            } else if (y > 1200) {
+                turn()
+            } else if (x < 400) {
+                moveLeft()
+            } else {
+                moveRight()
             }
         }
     }
 
     private fun checkInput(delta: Float) {
-        if (Keys.wasPressed(KeyCode.LEFT.keyCode, (delta * 1000).toDouble())) {
-            if (piece.canMoveLeft(playfield)) {
-                piece.moveLeft()
-                sndTick?.play()
-            }
-        } else if (Keys.wasPressed(KeyCode.RIGHT.keyCode, (delta * 1000).toDouble())) {
-            if (piece.canMoveRight(playfield)) {
-                piece.moveRight()
-                sndTick?.play()
-            }
+        if (Keys.wasPressed(KeyCode.DOWN.keyCode, (delta * 1000).toDouble())) {
+            moveDown()
         } else if (Keys.wasPressed(KeyCode.UP.keyCode, (delta * 1000).toDouble())) {
-            if (piece.canTurn(playfield)) {
-                piece.turn()
-                sndRotate?.play()
-            } else {
-                sndRotateFail?.play()
-            }
-        } else if (Keys.wasPressed(KeyCode.DOWN.keyCode, (delta * 1000).toDouble())) {
-            if (piece.canMoveDown(playfield)) {
-                piece.moveDown()
-                score.tick()
-                sndTick?.play()
-            }
+            turn()
+        } else if (Keys.wasPressed(KeyCode.LEFT.keyCode, (delta * 1000).toDouble())) {
+            moveLeft()
+        } else if (Keys.wasPressed(KeyCode.RIGHT.keyCode, (delta * 1000).toDouble())) {
+            moveRight()
         }
     }
 
     override fun update(time: Float, delta: Float) {
+        document.body?.style?.backgroundColor = "#ddd"
         var tick = false
         timeTillNextTick -= delta
         while (timeTillNextTick < 0f) {
@@ -266,8 +258,8 @@ class GameScreen : Screen() {
         sprites.render()
 
         val fs = score.formatted()
-        Texts.drawText(10f, 58f, fs, font = "bold 48pt Arial", fillStyle = "rgba(${shadowColor[0]}, ${shadowColor[1]}, ${shadowColor[2]}, 1)")
-        Texts.drawText(7f, 55f, fs, font = "bold 48pt Arial", fillStyle = "rgba(${textColor[0]}, ${textColor[1]}, ${textColor[2]}, 0.9)")
+        Texts.drawText(10f, -58f, fs, font = "bold 48pt Arial", fillStyle = "rgba(${shadowColor[0]}, ${shadowColor[1]}, ${shadowColor[2]}, 1)")
+        Texts.drawText(7f, -55f, fs, font = "bold 48pt Arial", fillStyle = "rgba(${textColor[0]}, ${textColor[1]}, ${textColor[2]}, 0.9)")
 
         if (gameOver) {
             Texts.drawText(53f, 803f, "GAME OVER!", font = "bold 80pt Arial", fillStyle = "rgba(55,0,0,1)")
@@ -308,13 +300,16 @@ class GameScreen : Screen() {
         when(linesRemoved) {
             0 -> {}
             1 -> {
-                sndSingle?.play()
+                GameSounds.SINGLE.play()
+                document.body?.style?.backgroundColor = "#ff0"
             }
             2 -> {
-                sndDouble?.play()
+                GameSounds.DOUBLE.play()
+                document.body?.style?.backgroundColor = "#f80"
             }
             else -> {
-                sndTriple?.play()
+                GameSounds.TRIPLE.play()
+                document.body?.style?.backgroundColor = "#f00"
             }
         }
     }
