@@ -81,7 +81,7 @@ class GameScreen : Screen() {
 
         Keys.setInputProcessor(object : EmptyInputProcessor() {
             override fun pointerClick(pointer: Int, x: Float, y: Float) {
-                println("click: $x, $y")
+                // println("click: $x, $y")
                 handleClick(pointer, x, y)
             }
         })

@@ -10,7 +10,6 @@ var tetris = function (_, Kotlin, $module$kudens) {
   var game_0 = $module$kudens.games.perses.game;
   var sound_0 = $module$kudens.games.perses.sound;
   var input_0 = $module$kudens.games.perses.input;
-  var println = Kotlin.kotlin.io.println_s8jyv4$;
   var EmptyInputProcessor = $module$kudens.games.perses.input.EmptyInputProcessor;
   var KeyCode = $module$kudens.games.perses.input.KeyCode;
   var text_0 = $module$kudens.games.perses.text;
@@ -54,7 +53,6 @@ var tetris = function (_, Kotlin, $module$kudens) {
     EmptyInputProcessor.call(this);
   }
   GameScreen$loadResources$ObjectLiteral.prototype.pointerClick_nhq4am$ = function (pointer, x, y) {
-    println('click: ' + x + ', ' + y);
     this.this$GameScreen.handleClick_0(pointer, x, y);
   };
   GameScreen$loadResources$ObjectLiteral.$metadata$ = {
