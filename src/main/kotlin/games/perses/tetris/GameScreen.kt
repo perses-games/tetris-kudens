@@ -4,8 +4,8 @@ import games.perses.color.Color
 import games.perses.game.Game
 import games.perses.game.Screen
 import games.perses.input.EmptyInputProcessor
+import games.perses.input.Input
 import games.perses.input.KeyCode
-import games.perses.input.Keys
 import games.perses.sound.Music
 import games.perses.sprite.Sprite
 import games.perses.sprite.SpriteBatch
@@ -79,7 +79,7 @@ class GameScreen : Screen() {
 
         music = Music.play("music/Tetris.mp3", 0.1, looping = true)
 
-        Keys.setInputProcessor(object : EmptyInputProcessor() {
+        Input.setInputProcessor(object : EmptyInputProcessor() {
             override fun pointerClick(pointer: Int, x: Float, y: Float) {
                 // println("click: $x, $y")
                 handleClick(pointer, x, y)
@@ -88,7 +88,7 @@ class GameScreen : Screen() {
     }
 
     override fun unloadResources() {
-        Textures.clear()
+        Textures.dispose()
     }
 
     private fun moveDown() {
@@ -126,27 +126,21 @@ class GameScreen : Screen() {
         if (x > 720 && x < 800 && y > 1520 && y < 1600) {
             Game.view.switchFullscreen()
         } else {
-            if (y < 400) {
-                moveDown()
-            } else if (y > 1200) {
-                turn()
-            } else if (x < 400) {
-                moveLeft()
-            } else {
-                moveRight()
+            when {
+              y < 400 -> moveDown()
+              y > 1200 -> turn()
+              x < 400 -> moveLeft()
+              else -> moveRight()
             }
         }
     }
 
     private fun checkInput(delta: Float) {
-        if (Keys.wasPressed(KeyCode.DOWN.keyCode, (delta * 1000).toDouble())) {
-            moveDown()
-        } else if (Keys.wasPressed(KeyCode.UP.keyCode, (delta * 1000).toDouble())) {
-            turn()
-        } else if (Keys.wasPressed(KeyCode.LEFT.keyCode, (delta * 1000).toDouble())) {
-            moveLeft()
-        } else if (Keys.wasPressed(KeyCode.RIGHT.keyCode, (delta * 1000).toDouble())) {
-            moveRight()
+        when {
+          Input.wasPressed(KeyCode.DOWN.keyCode, (delta * 1000).toDouble()) -> moveDown()
+          Input.wasPressed(KeyCode.UP.keyCode, (delta * 1000).toDouble()) -> turn()
+          Input.wasPressed(KeyCode.LEFT.keyCode, (delta * 1000).toDouble()) -> moveLeft()
+          Input.wasPressed(KeyCode.RIGHT.keyCode, (delta * 1000).toDouble()) -> moveRight()
         }
     }
 

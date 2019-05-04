@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tetris-kudens.iml" filepath="$PROJECT_DIR$/.idea/modules/tetris-kudens.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tetris-kudens.iml" filepath="$PROJECT_DIR$/.idea/modules/tetris-kudens.iml" group="tetris-kudens" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/tetris-kudens_main.iml" filepath="$PROJECT_DIR$/.idea/modules/tetris-kudens_main.iml" group="tetris-kudens" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/tetris-kudens_test.iml" filepath="$PROJECT_DIR$/.idea/modules/tetris-kudens_test.iml" group="tetris-kudens" />
     </modules>
