@@ -1,6 +1,6 @@
 package games.perses.tetris
 
-import games.perses.color.Color
+import games.perses.kudens.color.Color
 import org.khronos.webgl.Uint8Array
 
 /**

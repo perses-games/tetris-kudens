@@ -1,7 +1,7 @@
 package games.perses.tetris
 
-import games.perses.game.DrawMode
-import games.perses.game.Game
+import games.perses.kudens.game.DrawMode
+import games.perses.kudens.game.Game
 
 /**
  * Kudens example game

@@ -1,16 +1,16 @@
 package games.perses.tetris
 
-import games.perses.color.Color
-import games.perses.game.Game
-import games.perses.game.Screen
-import games.perses.input.EmptyInputProcessor
-import games.perses.input.Input
-import games.perses.input.KeyCode
-import games.perses.sound.Music
-import games.perses.sprite.Sprite
-import games.perses.sprite.SpriteBatch
-import games.perses.text.Texts
-import games.perses.texture.Textures
+import games.perses.kudens.color.Color
+import games.perses.kudens.game.Game
+import games.perses.kudens.game.Screen
+import games.perses.kudens.input.EmptyInputProcessor
+import games.perses.kudens.input.Input
+import games.perses.kudens.input.KeyCode
+import games.perses.kudens.sound.Music
+import games.perses.kudens.sprite.Sprite
+import games.perses.kudens.sprite.SpriteBatch
+import games.perses.kudens.text.Texts
+import games.perses.kudens.texture.Textures
 import org.w3c.dom.HTMLAudioElement
 import kotlin.browser.document
 

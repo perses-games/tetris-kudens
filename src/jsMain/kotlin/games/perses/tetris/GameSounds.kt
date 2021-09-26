@@ -1,6 +1,6 @@
 package games.perses.tetris
 
-import games.perses.sound.Sounds
+import games.perses.kudens.sound.Sounds
 
 /**
  * User: rnentjes

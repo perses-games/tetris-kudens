@@ -1,6 +1,6 @@
 package games.perses.tetris
 
-import kotlin.js.Math
+import kotlin.random.Random
 
 /**
  * User: rnentjes
@@ -8,7 +8,7 @@ import kotlin.js.Math
  * Time: 14:07
  */
 class Piece {
-    var type = PieceType.values()[(Math.random() * PieceType.values().size).toInt()]
+    var type = PieceType.values()[(Random.nextInt(PieceType.values().size))]
     var orientation = 0
     var x = 5
     var y = 21
@@ -108,6 +108,6 @@ class Piece {
         x = 5
         y = 21
 
-        type = PieceType.values()[(Math.random() * PieceType.values().size).toInt()]
+        type = PieceType.values()[(Random.nextInt(PieceType.values().size))]
     }
 }
