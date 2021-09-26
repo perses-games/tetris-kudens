@@ -11,8 +11,8 @@ import games.perses.kudens.sprite.Sprite
 import games.perses.kudens.sprite.SpriteBatch
 import games.perses.kudens.text.Texts
 import games.perses.kudens.texture.Textures
+import kotlinx.browser.document
 import org.w3c.dom.HTMLAudioElement
-import kotlin.browser.document
 
 /**
  * User: rnentjes
@@ -122,6 +122,17 @@ class GameScreen : Screen() {
         }
     }
 
+    private fun handleSpace() {
+        if (piece.canMoveDown(playfield)) {
+            GameSounds.WHOOSH.play()
+        } else {
+            GameSounds.ROTATE_FAIL.play()
+        }
+        while (piece.canMoveDown(playfield)) {
+            piece.moveDown()
+        }
+    }
+
     private fun  handleClick(pointer: Int, x: Float, y: Float) {
         if (x > 720 && x < 800 && y > 1520 && y < 1600) {
             Game.view.switchFullscreen()
@@ -141,6 +152,7 @@ class GameScreen : Screen() {
           Input.wasPressed(KeyCode.UP.keyCode, (delta * 1000).toDouble()) -> turn()
           Input.wasPressed(KeyCode.LEFT.keyCode, (delta * 1000).toDouble()) -> moveLeft()
           Input.wasPressed(KeyCode.RIGHT.keyCode, (delta * 1000).toDouble()) -> moveRight()
+          Input.wasPressed(KeyCode.SPACE.keyCode, (delta * 1000).toDouble()) -> handleSpace()
         }
     }
 
@@ -154,6 +166,9 @@ class GameScreen : Screen() {
         }
 
         if (gameOver) {
+            if (Input.wasPressed(KeyCode.SPACE.keyCode, (delta * 1000).toDouble())) {
+                Game.setScreen(GameScreen())
+            }
             return
         }
 
