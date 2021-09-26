@@ -8,9 +8,8 @@ import games.perses.kudens.game.Game
  */
 
 fun main(args: Array<String>) {
-    // Don't clear the screen every frame (everything is redrawn anyway)
     // otherwise set clear color with: Game.setClearColor(<red>, <green>, <blue>, <alpha>), values 0f - 1f
-    Game.clearScreenEveryFrame = false
+    Game.clearScreenEveryFrame = true
 
     // From the game perspective the game will always be 800 pixels (units?) wide
     Game.view.setToWidth(800f)
